@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c72535d6e674cbaabc303f4ed3aca9, type: 3}
+  m_Name: SeasonalCliff
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: -876973696, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 1014996484, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1300694682, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -351405654, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1260121452, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 1
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0100000002000000
+    m_NeighborPositions:
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 0, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 1
+    m_Sprites:
+    - {fileID: -876973696, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: 548219378, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: 916505176, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: 2067320083, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 1
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0100000001000000
+    m_NeighborPositions:
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 0, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 2
+    m_Sprites:
+    - {fileID: -96767222, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1232178320, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: 572028620, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1228787332, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 1
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0200000001000000
+    m_NeighborPositions:
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: 0, z: 0}
+    m_RuleTransform: 0
+  - m_Id: 3
+    m_Sprites:
+    - {fileID: 850882788, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -61162911, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: 578198296, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: 938194169, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    m_GameObject: {fileID: 0}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.5
+    m_Output: 1
+    m_ColliderType: 1
+    m_RandomTransform: 0
+    m_Neighbors: 0200000002000000
+    m_NeighborPositions:
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    m_RuleTransform: 0
+  tileType: 1
+  season: 1
+  alwaysConnect: 0
+  tilesToConnect: []
