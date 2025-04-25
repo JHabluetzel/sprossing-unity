@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
@@ -57,7 +56,7 @@ public class Pathfinding : MonoBehaviour
                     continue;
                 }
 
-                int newCost = currentNode.gCost + GetDistance(currentNode, neighbor);
+                int newCost = currentNode.gCost + GetDistance(currentNode, neighbor) + neighbor.movementPenalty;
 
                 if (newCost < neighbor.gCost || !openSet.Contains(neighbor))
                 {
@@ -68,6 +67,10 @@ public class Pathfinding : MonoBehaviour
                     if (!openSet.Contains(neighbor))
                     {
                         openSet.Add(neighbor);
+                    }
+                    else
+                    {
+                        openSet.UpdateItem(neighbor);
                     }
                 }
             }

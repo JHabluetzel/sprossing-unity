@@ -5,6 +5,7 @@ public class Node : IHeapItem<Node>
     public bool[] isWalkable;
     public Vector3 worldPosition;
     public int gridX, gridY;
+    public int movementPenalty;
     public Node parent;
     private int heapIndex;
 
@@ -19,13 +20,15 @@ public class Node : IHeapItem<Node>
         }
     }
 
-    public Node(Vector3 worldPosition, int gridX, int gridY)
+    public Node(Vector3 worldPosition, int gridX, int gridY, int movementPenalty)
     {
         isWalkable = new bool[3];
 
         this.worldPosition = worldPosition;
         this.gridX = gridX;
         this.gridY = gridY;
+
+        this.movementPenalty = movementPenalty;
     }
 
     public int HeapIndex

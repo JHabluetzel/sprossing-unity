@@ -104,6 +104,11 @@ public class NPCController : MovementController
             for (int i = 0; i < path.Length; i++)
             {
                 Gizmos.DrawCube(path[i], Vector3.one * 0.25f);
+
+                if (i > 0)
+                {
+                    Gizmos.DrawLine(path[i - 1], path[i]);
+                }
             }
         }
     }
