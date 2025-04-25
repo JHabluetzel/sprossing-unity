@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 public class WorldManager : MonoBehaviour
 {
     [SerializeField] private MovementController player;
+    [SerializeField] private NodeGrid nodeGrid;
 
     [SerializeField] private SeasonalRuleTile[] allTiles;
 
@@ -157,6 +158,68 @@ public class WorldManager : MonoBehaviour
             {
                 tilemaps[i].SetTile(savedTiles[j].position, allTiles[(int) savedTiles[j].tileType]);
             }
+        }
+    }
+
+    public bool IsPositionWalkable(Vector3 position)
+    {
+        Node checkNode = nodeGrid.GetNodeFromWorldPosition(position);
+        return checkNode != null && checkNode.isWalkable[0];
+    }
+
+    public void Terraform(Vector3 position, int layer)
+    {
+        int tileLayer = layer + 1;
+        Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
+
+        SeasonalRuleTile tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
+
+        if (tile == null)
+        {
+            tileLayer = layer;
+
+            tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
+        }
+
+        if (tile == null)
+        {
+            return;
+        }
+
+        switch (tile.tileType)
+        {
+            case TileType.Grass: //add water
+                tilemaps[tileLayer].SetTile(tilePosition, allTiles[1]);
+                tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[2]);
+
+                nodeGrid.UpdateNodeInGrid(position, tileLayer / 2, false);
+                break;
+            case TileType.Cliff: 
+                tile = tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+                
+                if (tile != null && tile.tileType == TileType.Grass)
+                {
+                    tilemaps[tileLayer + 2].SetTile(tilePosition + Vector3Int.up, null);
+                    tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, null);
+                    tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
+
+                    nodeGrid.UpdateNodeInGrid(position + GetComponent<Grid>().cellSize, (tileLayer + 2) / 2, false);
+                    nodeGrid.UpdateNodeInGrid(position, tileLayer / 2, true);
+                }
+
+                break;
+            case TileType.Water: //remove water
+                tilemaps[tileLayer].SetTile(tilePosition, null);
+                tilemaps[tileLayer - 1].SetTile(tilePosition, allTiles[0]);
+
+                nodeGrid.UpdateNodeInGrid(position, tileLayer / 2, true);
+                break;
+            case TileType.Path: //remove path
+                tilemaps[tileLayer].SetTile(tilePosition, null);
+                tilemaps[tileLayer - 1].SetTile(tilePosition, allTiles[0]);
+
+                nodeGrid.UpdateNodeInGrid(position, tileLayer / 2, true);
+                break;
         }
     }
 }

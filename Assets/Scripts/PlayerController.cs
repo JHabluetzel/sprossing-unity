@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MovementController
 {
     [SerializeField] private Grid grid;
-    [SerializeField] private NodeGrid nodeGrid;
+    [SerializeField] private WorldManager worldManager;
     [SerializeField] private float timeToMove = 0.4f;
     [SerializeField] private float timeToTurn = 0.1f;
     private bool isMoving;
@@ -31,7 +32,7 @@ public class PlayerController : MovementController
         {
             StartCoroutine(MovePlayer(input));
         }
-        else if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             isButtonDown = true;
         }
@@ -81,25 +82,21 @@ public class PlayerController : MovementController
             startPosition = transform.position;
             targetPosition = grid.CellToWorld(gridPosition + direction);
 
-            Node checkNode = nodeGrid.GetNodeFromWorldPosition(targetPosition);
-
-            if (checkNode == null || !checkNode.isWalkable[0])
+            if (!worldManager.IsPositionWalkable(targetPosition))
             {
                 isMoving = false;
                 yield break;
             }
 
-            if (direction.magnitude > 1f) //diagonal movement
+            if (direction.x != 0 && direction.y != 0) //diagonal movement
             {
                 Vector3 checkPosition = grid.CellToWorld(gridPosition + new Vector3Int(direction.x, 0, 0));
-                checkNode = nodeGrid.GetNodeFromWorldPosition(checkPosition);
 
-                if (checkNode != null && checkNode.isWalkable[0])
+                if (worldManager.IsPositionWalkable(checkPosition))
                 {
                     checkPosition = grid.CellToWorld(gridPosition + new Vector3Int(0, direction.y, 0));
-                    checkNode = nodeGrid.GetNodeFromWorldPosition(checkPosition);
-
-                    if (checkNode == null || !checkNode.isWalkable[0])
+                    
+                    if (!worldManager.IsPositionWalkable(checkPosition))
                     {
                         isMoving = false;
                         yield break;
@@ -129,5 +126,18 @@ public class PlayerController : MovementController
         animator.PlayIdleAnimation(dir);
 
         isMoving = false;
+    }
+
+    public void Terraform()
+    {
+        if (isMoving)
+        {
+            return;
+        }
+
+        if (lastDirection.x != 0 && lastDirection.y != 0)
+            return;
+
+        worldManager.Terraform(transform.position + new Vector3(lastDirection.x * grid.cellSize.x, lastDirection.y * grid.cellSize.y, 0), 0);
     }
 }

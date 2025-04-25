@@ -60,7 +60,6 @@ public class NodeGrid : MonoBehaviour
                         if (nodes[x,y] == null)
                         {
                             nodes[x,y] = new Node(bottomLeft + new Vector3(x * grid.cellSize.x, y * grid.cellSize.y, 0), x, y, tile.tileType == TileType.Path ? 0 : 5);
-                            Debug.Log(tile.tileType == TileType.Path);
                         }
 
                         nodes[x,y].isWalkable[i / 2] = tile.tileType == TileType.Grass || tile.tileType == TileType.Path;
@@ -114,5 +113,11 @@ public class NodeGrid : MonoBehaviour
         }
 
         return neighbors;
+    }
+
+    public void UpdateNodeInGrid(Vector3 center, int layer, bool isWalkable)
+    {
+        Node centerNode = GetNodeFromWorldPosition(center);
+        nodes[centerNode.gridX, centerNode.gridY].isWalkable[layer] = isWalkable;
     }
 }
