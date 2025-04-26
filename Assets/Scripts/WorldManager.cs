@@ -195,12 +195,12 @@ public class WorldManager : MonoBehaviour
                 nodeGrid.UpdateNodeInGrid(position, tileLayer / 2, false);
                 break;
             case TileType.Cliff: 
-                tile = tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+                tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                 
                 if (tile != null && tile.tileType == TileType.Grass)
                 {
+                    tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, null);
                     tilemaps[tileLayer + 2].SetTile(tilePosition + Vector3Int.up, null);
-                    tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, null);
                     tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
 
                     nodeGrid.UpdateNodeInGrid(position + GetComponent<Grid>().cellSize, (tileLayer + 2) / 2, false);

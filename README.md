@@ -7,6 +7,7 @@ https://www.youtube.com/@GameCodeLibrary/videos
 https://www.youtube.com/watch?v=I3_i-x9nCjs
 https://www.youtube.com/watch?v=TeEWLC-QKjw
 https://www.youtube.com/watch?v=snUe2oa_iM0
+https://www.youtube.com/watch?v=6mNak-mQZpc
 https://www.youtube.com/watch?v=mZfyt03LDH4&list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW&index=3
 
 UNITY
@@ -377,6 +378,7 @@ Add „animator“ component
 Create new folder & name it „Animations“
 Create animationController & name it „player“
 Create „idle“, „move“ & „turn“ folders
+update animations with "2d animation asset updater"
 
 https://www.youtube.com/watch?v=4xPHqEEa-V0
 Select player & fill empty fields

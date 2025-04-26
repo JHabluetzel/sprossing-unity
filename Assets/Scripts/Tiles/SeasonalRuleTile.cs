@@ -9,42 +9,37 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
 {
     public TileType tileType;
     public Seasons season;
-    public bool alwaysConnect;
     public TileBase[] tilesToConnect;
 
     public class Neighbor : RuleTile.TilingRule.Neighbor
     {
         public const int Any = 3;
-        public const int Specific = 4;
-        public const int NotSpecific = 5;
-        public const int Nothing = 6;
+        public const int NotAny = 4;
+        public const int OnlyAny = 5;
     }
 
     public override bool RuleMatch(int neighbor, TileBase tile)
     {
         switch (neighbor)
         {
-            case Neighbor.This: return Check_This(tile);
-            case Neighbor.NotThis: return Check_NotThis(tile);
+            case Neighbor.This: return Check_ThisOnly(tile);
             case Neighbor.Any: return Check_Any(tile);
-            case Neighbor.Specific: return Check_Specific(tile);
-            case Neighbor.NotSpecific: return Check_NotSpecific(tile);
-            case Neighbor.Nothing: return Check_Nothing(tile);
+            case Neighbor.NotThis: return Check_NotThis(tile);
+            case Neighbor.NotAny: return Check_NotAny(tile);
+            case Neighbor.OnlyAny: return Check_OnlyAny(tile);
         }
 
         return base.RuleMatch(neighbor, tile);
     }
 
-    private bool Check_This(TileBase tile)
+    private bool Check_ThisOnly(TileBase tile)
     {
-        if (!alwaysConnect)
-        {
-            return tile == this;
-        }
-        else
-        {
-            return tilesToConnect.Contains(tile) || tile == this;
-        }
+        return tile == this;
+    }
+
+    private bool Check_Any(TileBase tile)
+    {
+        return tilesToConnect.Contains(tile) || tile == this;
     }
 
     private bool Check_NotThis(TileBase tile)
@@ -52,24 +47,19 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
         return tile != this;
     }
 
-    private bool Check_Any(TileBase tile)
+    private bool Check_NotAny(TileBase tile)
     {
-        return tile != null || tile != this;
+        if (tile == this)
+        {
+            return false;
+        }
+
+        return tile == null || !tilesToConnect.Contains(tile);
     }
 
-    private bool Check_Specific(TileBase tile)
+    private bool Check_OnlyAny(TileBase tile)
     {
         return tilesToConnect.Contains(tile);
-    }
-
-    private bool Check_NotSpecific(TileBase tile)
-    {
-        return !tilesToConnect.Contains(tile) && tile != this;
-    }
-
-    private bool Check_Nothing(TileBase tile)
-    {
-        return tile == null;
     }
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
