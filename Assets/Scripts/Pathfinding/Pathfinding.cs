@@ -14,12 +14,12 @@ public class Pathfinding : MonoBehaviour
         requestManager = GetComponent<PathRequestManager>();
     }
 
-    public void StartFindPath(Vector3 startPosition, Vector3 targetPosition)
+    public void StartFindPath(Vector3 startPosition, int layer, Vector3 targetPosition)
     {
-        StartCoroutine(FindPath(startPosition, targetPosition));
+        StartCoroutine(FindPath(startPosition, layer, targetPosition));
     }
 
-    IEnumerator FindPath(Vector3 startPosition, Vector3 targetPosition)
+    IEnumerator FindPath(Vector3 startPosition, int layer, Vector3 targetPosition)
     {
         Vector3[] waypoints = new Vector3[0];
         bool pathWasFound = false;
@@ -27,7 +27,7 @@ public class Pathfinding : MonoBehaviour
         Node startNode = nodes.GetNodeFromWorldPosition(startPosition);
         Node targetNode = nodes.GetNodeFromWorldPosition(targetPosition);
 
-        if (startPosition == targetPosition || startNode == null || targetNode == null || !targetNode.isWalkable[0])
+        if (startPosition == targetPosition || startNode == null || targetNode == null)
         {
             requestManager.FinishedProcessingPath(waypoints, pathWasFound);
             yield break;
@@ -49,9 +49,9 @@ public class Pathfinding : MonoBehaviour
                 break;
             }
 
-            foreach (Node neighbor in nodes.GetNeighbors(currentNode))
+            foreach (Node neighbor in nodes.GetNeighbors(currentNode, layer))
             {
-                if (!neighbor.isWalkable[0] || closedSet.Contains(neighbor))
+                if (!neighbor.IsWalkable(layer, Vector3Int.zero) || closedSet.Contains(neighbor))
                 {
                     continue;
                 }

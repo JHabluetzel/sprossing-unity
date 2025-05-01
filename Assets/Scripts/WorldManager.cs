@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class WorldManager : MonoBehaviour
 {
-    [SerializeField] private MovementController player;
+    [SerializeField] private PlayerController player;
     [SerializeField] private NodeGrid nodeGrid;
 
     [SerializeField] private SeasonalRuleTile[] allTiles;
@@ -161,10 +161,15 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    public bool IsPositionWalkable(Vector3 position)
+    public int GetPositionLevel(Vector3 position, int layer, Vector3Int direction)
     {
-        Node checkNode = nodeGrid.GetNodeFromWorldPosition(position);
-        return checkNode != null && checkNode.isWalkable[0];
+        Node targetNode = nodeGrid.GetNodeFromWorldPosition(position);
+        if (targetNode == null)
+        {
+            return 0;
+        }
+
+        return targetNode.GetLevel(layer, direction);
     }
 
     public void Terraform(Vector3 position, int layer)

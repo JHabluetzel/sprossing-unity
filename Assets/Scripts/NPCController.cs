@@ -14,7 +14,7 @@ public class NPCController : MovementController
         if (!isBusy)
         {
             isBusy = true;
-            PathRequestManager.RequestPath(transform.position, target.position, OnPathFound);
+            PathRequestManager.RequestPath(transform.position, layer, target.position, OnPathFound);
         }
     }
 
@@ -57,7 +57,7 @@ public class NPCController : MovementController
 
             animator.PlayWalkAnimation(dir);
 
-            while (elapsedTime < timeToMove * direction.magnitude)
+            while (elapsedTime < timeToMove * pathDirection.magnitude)
             {
                 transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / timeToMove);
                 elapsedTime += Time.deltaTime;

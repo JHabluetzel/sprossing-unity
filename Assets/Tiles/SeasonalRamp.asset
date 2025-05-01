@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c72535d6e674cbaabc303f4ed3aca9, type: 3}
   m_Name: SeasonalRamp
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 82182728, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+  m_DefaultSprite: {fileID: -443198169, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
@@ -394,6 +394,6 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
     m_RuleTransform: 0
-  tileType: 0
+  tileType: 4
   season: 0
   tilesToConnect: []

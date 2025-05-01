@@ -67,19 +67,20 @@ public class PlayerController : MovementController
 
                 animator.PlayWalkAnimation(dir);
 
-                if (worldManager.IsPositionWalkable(targetPosition))
+                int targetLayer = worldManager.GetPositionLevel(targetPosition, layer, input);
+
+                if (targetLayer > 0)
                 {
                     if (input.x != 0 && input.y != 0) //diagonal movement
                     {
                         Vector3 checkPosition = grid.CellToWorld(gridPosition + new Vector3Int(input.x, 0, 0));
 
-                        if (worldManager.IsPositionWalkable(checkPosition))
+                        if (worldManager.GetPositionLevel(checkPosition, layer, Vector3Int.zero) == layer)
                         {
                             checkPosition = grid.CellToWorld(gridPosition + new Vector3Int(0, input.y, 0));
 
-                            if (worldManager.IsPositionWalkable(checkPosition))
+                            if (worldManager.GetPositionLevel(checkPosition, layer, Vector3Int.zero) == layer)
                             {
-                                //TODO: Fix diagonal movement
                                 while (elapsedTime < timeToMove * (targetPosition - startPosition).magnitude)
                                 {
                                     transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / timeToMove);
@@ -88,6 +89,8 @@ public class PlayerController : MovementController
                                 }
 
                                 transform.position = targetPosition;
+                                layer = targetLayer;
+                                spriteRenderer.sortingOrder = layer - 5;
                             }
                         }
                     }
@@ -102,6 +105,8 @@ public class PlayerController : MovementController
                         }
 
                         transform.position = targetPosition;
+                        layer = targetLayer;
+                        spriteRenderer.sortingOrder = layer - 5;
                     }
                 }
 
@@ -120,11 +125,6 @@ public class PlayerController : MovementController
 
     public void Terraform()
     {
-        if (isMoving)
-        {
-            return;
-        }
-
         if (lastDirection.x != 0 && lastDirection.y != 0)
             return;
 

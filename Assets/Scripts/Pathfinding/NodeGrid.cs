@@ -47,26 +47,56 @@ public class NodeGrid : MonoBehaviour
     private void GenerateGrid()
     {
         nodes = new Node[gridSize.x, gridSize.y];
+        string temp = "";
 
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                for (int i = tilemaps.Length - 1; i >= 0; i--) //top to bottom
+                for (int i = 0; i < tilemaps.Length; i += 2) //bottom to top
                 {
                     SeasonalRuleTile tile = tilemaps[i].GetTile<SeasonalRuleTile>(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0));
                     if (tile != null)
                     {
                         if (nodes[x,y] == null)
                         {
-                            nodes[x,y] = new Node(bottomLeft + new Vector3(x * grid.cellSize.x, y * grid.cellSize.y, 0), x, y, tile.tileType == TileType.Path ? 0 : 5);
+                            nodes[x,y] = new Node(bottomLeft + new Vector3(x * grid.cellSize.x, y * grid.cellSize.y, 0), x, y);
                         }
 
-                        nodes[x,y].isWalkable[i / 2] = tile.tileType == TileType.Grass || tile.tileType == TileType.Path;
+                        if (nodes[x,y].gridID > 0)
+                        {
+                            nodes[x,y].gridID *= tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : 0;
+                        }
+                        else
+                        {
+                            nodes[x,y].gridID = tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : -i;
+                        }
+
+                        tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0));
+                        if (tile != null)
+                        {
+                            nodes[x, y].movementPenalty = tile.tileType == TileType.Path ? 0 : 5;
+
+                            if (tile.tileType == TileType.Ramp)
+                            {
+                                if (nodes[x, y].gridID <= 0) //top of ramp
+                                {
+                                    nodes[x, y].gridID = nodes[x, y - 1].gridID + 1;
+                                }
+                                else //bottom of ramp
+                                {
+                                    nodes[x, y].gridID++;
+                                }
+                            }
+                        }
                     }
                 }
+                temp += nodes[x, y].gridID + "-";
             }
+            temp += "\n";
         }
+
+        Debug.Log(temp);
     }
 
     public Node GetNodeFromWorldPosition(Vector3 worldPosition)
@@ -83,7 +113,7 @@ public class NodeGrid : MonoBehaviour
         return null;
     }
 
-    public List<Node> GetNeighbors(Node centerNode)
+    public List<Node> GetNeighbors(Node centerNode, int layer)
     {
         List<Node> neighbors = new List<Node>();
 
@@ -100,7 +130,7 @@ public class NodeGrid : MonoBehaviour
                     {
                         if ((x + y)%2 == 0) //is diagonal
                         {
-                            if (!nodes[checkX, centerNode.gridY].isWalkable[0] || !nodes[centerNode.gridX, checkY].isWalkable[0])
+                            if (!nodes[checkX, centerNode.gridY].IsWalkable(layer, new Vector3Int(x, y, 0)) || !nodes[centerNode.gridX, checkY].IsWalkable(layer, new Vector3Int(x, y, 0)))
                             {
                                 continue;
                             }
@@ -117,7 +147,7 @@ public class NodeGrid : MonoBehaviour
 
     public void UpdateNodeInGrid(Vector3 center, int layer, bool isWalkable)
     {
-        Node centerNode = GetNodeFromWorldPosition(center);
-        nodes[centerNode.gridX, centerNode.gridY].isWalkable[layer] = isWalkable;
+        //Node centerNode = GetNodeFromWorldPosition(center);
+        //nodes[centerNode.gridX, centerNode.gridY].isWalkable[layer] = isWalkable;
     }
 }

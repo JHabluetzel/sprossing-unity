@@ -13,15 +13,16 @@ public class SaveData
     public float[] playerPosition;
     public int[] playerDirection;
 
-    public SaveData(MovementController player)
+    public SaveData(PlayerController player)
     {
         playerPosition = new float[2];
-        playerDirection = new int[2];
+        playerDirection = new int[3];
 
         playerPosition[0] = player.transform.position.x;
         playerPosition[1] = player.transform.position.y;
 
         playerDirection[0] = player.lastDirection.x;
         playerDirection[1] = player.lastDirection.y;
+        playerDirection[2] = player.layer;
     }
 }

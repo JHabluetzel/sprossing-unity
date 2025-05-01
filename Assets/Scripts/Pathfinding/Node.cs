@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 public class Node : IHeapItem<Node>
 {
-    public bool[] isWalkable;
     public Vector3 worldPosition;
     public int gridX, gridY;
+    public int gridID;
     public int movementPenalty;
     public Node parent;
     private int heapIndex;
@@ -20,15 +21,11 @@ public class Node : IHeapItem<Node>
         }
     }
 
-    public Node(Vector3 worldPosition, int gridX, int gridY, int movementPenalty)
+    public Node(Vector3 worldPosition, int gridX, int gridY)
     {
-        isWalkable = new bool[3];
-
         this.worldPosition = worldPosition;
         this.gridX = gridX;
         this.gridY = gridY;
-
-        this.movementPenalty = movementPenalty;
     }
 
     public int HeapIndex
@@ -52,5 +49,47 @@ public class Node : IHeapItem<Node>
         }
 
         return -compare;
+    }
+
+    public int GetLevel(int layer, Vector3Int direction)
+    {
+        if (gridID <= 0)
+        {
+            return gridID;
+        }
+
+        if (layer == gridID || gridID % layer == 0)
+        {
+            return layer;
+        }
+        else if (direction.x == 0 && Math.Abs(layer - gridID) == 1)
+        {
+            return gridID;
+        }
+        else if (direction.x == 0 && gridID % (layer + 1) == 0)
+        {
+            return layer + 1;
+        }
+
+        return 0;
+    }
+
+    public bool IsWalkable(int layer, Vector3Int direction)
+    {
+        if (gridID <= 0)
+        {
+            return false;
+        }
+
+        if (layer == gridID || gridID % layer == 0)
+        {
+            return true;
+        }
+        else if (direction.x == 0)
+        {
+            return Math.Abs(layer - gridID) == 1;
+        }
+
+        return false;
     }
 }

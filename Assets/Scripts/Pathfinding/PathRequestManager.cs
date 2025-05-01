@@ -20,20 +20,22 @@ public class PathRequestManager : MonoBehaviour
     struct PathRequest
     {
         public Vector3 pathStart;
+        public int layer;
         public Vector3 pathEnd;
         public Action<Vector3[], bool> callback;
 
-        public PathRequest(Vector3 pathStart, Vector3 pathEnd, Action<Vector3[], bool> callback)
+        public PathRequest(Vector3 pathStart, int layer, Vector3 pathEnd, Action<Vector3[], bool> callback)
         {
             this.pathStart = pathStart;
+            this.layer = layer;
             this.pathEnd = pathEnd;
             this.callback = callback;
         }
     }
 
-    public static void RequestPath(Vector3 pathStart, Vector3 pathEnd, Action<Vector3[], bool> callback)
+    public static void RequestPath(Vector3 pathStart, int layer, Vector3 pathEnd, Action<Vector3[], bool> callback)
     {
-        PathRequest newRequest = new PathRequest(pathStart, pathEnd, callback);
+        PathRequest newRequest = new PathRequest(pathStart, layer, pathEnd, callback);
         instance.requestQueue.Enqueue(newRequest);
         instance.TryProcessNext();
     }
@@ -45,7 +47,7 @@ public class PathRequestManager : MonoBehaviour
             currRequest = requestQueue.Dequeue();
             isProcessing = true;
 
-            pathfinding.StartFindPath(currRequest.pathStart, currRequest.pathEnd);
+            pathfinding.StartFindPath(currRequest.pathStart, currRequest.layer, currRequest.pathEnd);
         }
     }
 
