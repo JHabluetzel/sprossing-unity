@@ -44,7 +44,7 @@ public class NodeGrid : MonoBehaviour
         GenerateGrid();
     }
 
-    private void GenerateGrid()
+    public void GenerateGrid()
     {
         nodes = new Node[gridSize.x, gridSize.y];
         string temp = "";
@@ -91,8 +91,10 @@ public class NodeGrid : MonoBehaviour
                         }
                     }
                 }
+
                 temp += nodes[x, y].gridID + "-";
             }
+
             temp += "\n";
         }
 
@@ -145,9 +147,48 @@ public class NodeGrid : MonoBehaviour
         return neighbors;
     }
 
-    public void UpdateNodeInGrid(Vector3 center, int layer, bool isWalkable)
+    public void UpdateNodeInGrid(Vector3 worldPosition, Vector3Int tilePosition)
     {
-        //Node centerNode = GetNodeFromWorldPosition(center);
-        //nodes[centerNode.gridX, centerNode.gridY].isWalkable[layer] = isWalkable;
+        Node updateNode = GetNodeFromWorldPosition(worldPosition);
+        nodes[updateNode.gridX, updateNode.gridY] = null;
+
+        for (int i = 0; i < tilemaps.Length; i += 2) //bottom to top
+        {
+            SeasonalRuleTile tile = tilemaps[i].GetTile<SeasonalRuleTile>(tilePosition);
+            if (tile != null)
+            {
+                if (nodes[updateNode.gridX, updateNode.gridY] == null)
+                {
+                    nodes[updateNode.gridX, updateNode.gridY] = new Node(worldPosition, updateNode.gridX, updateNode.gridY);
+                }
+
+                if (nodes[updateNode.gridX, updateNode.gridY].gridID > 0)
+                {
+                    nodes[updateNode.gridX, updateNode.gridY].gridID *= tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : 0;
+                }
+                else
+                {
+                    nodes[updateNode.gridX, updateNode.gridY].gridID = tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : -i;
+                }
+
+                tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(tilePosition);
+                if (tile != null)
+                {
+                    nodes[updateNode.gridX, updateNode.gridY].movementPenalty = tile.tileType == TileType.Path ? 0 : 5;
+
+                    if (tile.tileType == TileType.Ramp)
+                    {
+                        if (nodes[updateNode.gridX, updateNode.gridY].gridID <= 0) //top of ramp
+                        {
+                            nodes[updateNode.gridX, updateNode.gridY].gridID = nodes[updateNode.gridX, updateNode.gridY - 1].gridID + 1;
+                        }
+                        else //bottom of ramp
+                        {
+                            nodes[updateNode.gridX, updateNode.gridY].gridID++;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

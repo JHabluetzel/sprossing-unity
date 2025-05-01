@@ -128,6 +128,6 @@ public class PlayerController : MovementController
         if (lastDirection.x != 0 && lastDirection.y != 0)
             return;
 
-        worldManager.Terraform(transform.position + new Vector3(lastDirection.x * grid.cellSize.x, lastDirection.y * grid.cellSize.y, 0), 0);
+        worldManager.Terraform(transform.position + new Vector3(lastDirection.x * grid.cellSize.x, lastDirection.y * grid.cellSize.y, 0), layer);
     }
 }

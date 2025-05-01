@@ -18,7 +18,7 @@ public class MovementController : MonoBehaviour
         animator.PlayIdleAnimation(GetDirection(lastDirection));
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        layer = (spriteRenderer.sortingOrder - 2) / 2 * 3 + 7;
+        layer = spriteRenderer.sortingOrder + 5;
     }
 
     protected string GetDirection(Vector3Int direction)
