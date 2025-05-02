@@ -138,11 +138,27 @@ public class PlayerController : MovementController
         isMoving = false;
     }
 
+    public void Pathing()
+    {
+        if (lastDirection.x != 0 && lastDirection.y != 0)
+            return;
+
+        worldManager.Pathing(transform.position + new Vector3(lastDirection.x * grid.cellSize.x, lastDirection.y * grid.cellSize.y, 0), layer);
+    }
+
     public void Terraform()
     {
         if (lastDirection.x != 0 && lastDirection.y != 0)
             return;
 
         worldManager.Terraform(transform.position + new Vector3(lastDirection.x * grid.cellSize.x, lastDirection.y * grid.cellSize.y, 0), layer);
+    }
+
+    public void Waterscape()
+    {
+        if (lastDirection.x != 0 && lastDirection.y != 0)
+            return;
+
+        worldManager.Waterscape(transform.position + new Vector3(lastDirection.x * grid.cellSize.x, lastDirection.y * grid.cellSize.y, 0), layer);
     }
 }
