@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,6 +14,7 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
 
     public class Neighbor : RuleTile.TilingRule.Neighbor
     {
+        //This = 1, NotThis = 2
         public const int Any = 3;
         public const int NotAny = 4;
         public const int OnlyAny = 5;
@@ -23,8 +25,8 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
         switch (neighbor)
         {
             case Neighbor.This: return Check_ThisOnly(tile);
-            case Neighbor.Any: return Check_Any(tile);
             case Neighbor.NotThis: return Check_NotThis(tile);
+            case Neighbor.Any: return Check_Any(tile);
             case Neighbor.NotAny: return Check_NotAny(tile);
             case Neighbor.OnlyAny: return Check_OnlyAny(tile);
         }
@@ -60,6 +62,26 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
     private bool Check_OnlyAny(TileBase tile)
     {
         return tilesToConnect.Contains(tile);
+    }
+
+    public override bool GetTileAnimationData(Vector3Int position, ITilemap tilemap, ref TileAnimationData tileAnimationData)
+    {
+        Matrix4x4 transform = Matrix4x4.identity;
+        foreach (TilingRule rule in m_TilingRules)
+        {
+            if (rule.m_Output == TilingRuleOutput.OutputSprite.Animation)
+            {
+                if (RuleMatches(rule, position, tilemap, ref transform))
+                {
+                    Sprite[] sprites = new Sprite[2];
+                    Array.Copy(rule.m_Sprites, (int)season * 2, sprites, 0, 2);
+                    tileAnimationData.animatedSprites = sprites;
+                    tileAnimationData.animationSpeed = UnityEngine.Random.Range(rule.m_MinAnimationSpeed, rule.m_MaxAnimationSpeed);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)

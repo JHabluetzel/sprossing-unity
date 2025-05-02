@@ -177,10 +177,10 @@ public class WorldManager : MonoBehaviour
 
     public void Terraform(Vector3 position, int layer)
     {
-        if ((layer - 1) % 3 != 0)
+        if ((layer - 1) % 3 != 0) //on ramp
             return;
 
-        int tileLayer = (layer * 3 / 2 - 10) / 2  + 1;
+        int tileLayer = layer - 6;
 
         Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
 
@@ -189,14 +189,11 @@ public class WorldManager : MonoBehaviour
         if (tile == null)
         {
             tileLayer--;
-
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
         }
 
         if (tile == null)
-        {
             return;
-        }
 
         Debug.Log(tile.tileType);
 
@@ -209,11 +206,11 @@ public class WorldManager : MonoBehaviour
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
                 break;
             case TileType.Cliff:
+                Debug.Log(tileLayer);
                 tile = tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                 
-                if (tile != null && tile.tileType == TileType.Grass)
+                if (tile != null && tile.tileType == TileType.Grass) //remove cliff
                 {
-                    tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, null);
                     tilemaps[tileLayer + 2].SetTile(tilePosition + Vector3Int.up, null);
                     tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
 

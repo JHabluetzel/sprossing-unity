@@ -53,7 +53,7 @@ public class NodeGrid : MonoBehaviour
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                for (int i = 0; i < tilemaps.Length; i += 2) //bottom to top
+                for (int i = 0; i < tilemaps.Length; i += 3) //bottom to top
                 {
                     SeasonalRuleTile tile = tilemaps[i].GetTile<SeasonalRuleTile>(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0));
                     if (tile != null)
@@ -63,31 +63,57 @@ public class NodeGrid : MonoBehaviour
                             nodes[x,y] = new Node(bottomLeft + new Vector3(x * grid.cellSize.x, y * grid.cellSize.y, 0), x, y);
                         }
 
-                        if (nodes[x,y].gridID > 0)
+                        if (tile.tileType == TileType.Grass)
                         {
-                            nodes[x,y].gridID *= tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : 0;
+                            nodes[x, y].movementPenalty = 5;
+
+                            tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0));
+                            if (tile != null)
+                            {
+                                switch (tile.tileType)
+                                {
+                                    case TileType.Cliff:
+                                        nodes[x, y].gridID = -i;
+                                        break;
+                                    case TileType.Ramp:
+                                        if (nodes[x, y].gridID <= 0) //top of ramp
+                                        {
+                                            nodes[x, y].gridID = nodes[x, y - 1].gridID + 1;
+                                        }
+                                        else //bottom of ramp
+                                        {
+                                            nodes[x, y].gridID++;
+                                        }
+
+                                        break;
+                                    case TileType.Path:
+                                        nodes[x, y].movementPenalty = 0;
+                                        goto default;
+                                    default:
+                                        if (nodes[x, y].gridID > 0)
+                                        {
+                                            nodes[x, y].gridID *= i + 7;
+                                        }
+                                        else
+                                        {
+                                            nodes[x, y].gridID = i + 7;
+                                        }
+
+                                        break;
+                                }
+                            }
+                            else if (nodes[x, y].gridID > 0)
+                            {
+                                nodes[x, y].gridID *= i + 7;
+                            }
+                            else
+                            {
+                                nodes[x, y].gridID = i + 7;
+                            }
                         }
                         else
                         {
-                            nodes[x,y].gridID = tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : -i;
-                        }
-
-                        tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0));
-                        if (tile != null)
-                        {
-                            nodes[x, y].movementPenalty = tile.tileType == TileType.Path ? 0 : 5;
-
-                            if (tile.tileType == TileType.Ramp)
-                            {
-                                if (nodes[x, y].gridID <= 0) //top of ramp
-                                {
-                                    nodes[x, y].gridID = nodes[x, y - 1].gridID + 1;
-                                }
-                                else //bottom of ramp
-                                {
-                                    nodes[x, y].gridID++;
-                                }
-                            }
+                            nodes[x,y].gridID = -i;
                         }
                     }
                 }
@@ -152,7 +178,7 @@ public class NodeGrid : MonoBehaviour
         Node updateNode = GetNodeFromWorldPosition(worldPosition);
         nodes[updateNode.gridX, updateNode.gridY] = null;
 
-        for (int i = 0; i < tilemaps.Length; i += 2) //bottom to top
+        for (int i = 0; i < tilemaps.Length; i += 3) //bottom to top
         {
             SeasonalRuleTile tile = tilemaps[i].GetTile<SeasonalRuleTile>(tilePosition);
             if (tile != null)
@@ -162,31 +188,57 @@ public class NodeGrid : MonoBehaviour
                     nodes[updateNode.gridX, updateNode.gridY] = new Node(worldPosition, updateNode.gridX, updateNode.gridY);
                 }
 
-                if (nodes[updateNode.gridX, updateNode.gridY].gridID > 0)
+                if (tile.tileType == TileType.Grass)
                 {
-                    nodes[updateNode.gridX, updateNode.gridY].gridID *= tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : 0;
+                    nodes[updateNode.gridX, updateNode.gridY].movementPenalty = 5;
+
+                    tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(new Vector3Int(updateNode.gridX - gridSize.x / 2, updateNode.gridY - gridSize.y / 2, 0));
+                    if (tile != null)
+                    {
+                        switch (tile.tileType)
+                        {
+                            case TileType.Cliff:
+                                nodes[updateNode.gridX, updateNode.gridY].gridID = -i;
+                                break;
+                            case TileType.Ramp:
+                                if (nodes[updateNode.gridX, updateNode.gridY].gridID <= 0) //top of ramp
+                                {
+                                    nodes[updateNode.gridX, updateNode.gridY].gridID = nodes[updateNode.gridX, updateNode.gridY - 1].gridID + 1;
+                                }
+                                else //bottom of ramp
+                                {
+                                    nodes[updateNode.gridX, updateNode.gridY].gridID++;
+                                }
+
+                                break;
+                            case TileType.Path:
+                                nodes[updateNode.gridX, updateNode.gridY].movementPenalty = 0;
+                                goto default;
+                            default:
+                                if (nodes[updateNode.gridX, updateNode.gridY].gridID > 0)
+                                {
+                                    nodes[updateNode.gridX, updateNode.gridY].gridID *= i + 7;
+                                }
+                                else
+                                {
+                                    nodes[updateNode.gridX, updateNode.gridY].gridID = i + 7;
+                                }
+
+                                break;
+                        }
+                    }
+                    else if (nodes[updateNode.gridX, updateNode.gridY].gridID > 0)
+                    {
+                        nodes[updateNode.gridX, updateNode.gridY].gridID *= i + 7;
+                    }
+                    else
+                    {
+                        nodes[updateNode.gridX, updateNode.gridY].gridID = i + 7;
+                    }
                 }
                 else
                 {
-                    nodes[updateNode.gridX, updateNode.gridY].gridID = tile.tileType == TileType.Grass ? i / 2 * 3 + 7 : -i;
-                }
-
-                tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(tilePosition);
-                if (tile != null)
-                {
-                    nodes[updateNode.gridX, updateNode.gridY].movementPenalty = tile.tileType == TileType.Path ? 0 : 5;
-
-                    if (tile.tileType == TileType.Ramp)
-                    {
-                        if (nodes[updateNode.gridX, updateNode.gridY].gridID <= 0) //top of ramp
-                        {
-                            nodes[updateNode.gridX, updateNode.gridY].gridID = nodes[updateNode.gridX, updateNode.gridY - 1].gridID + 1;
-                        }
-                        else //bottom of ramp
-                        {
-                            nodes[updateNode.gridX, updateNode.gridY].gridID++;
-                        }
-                    }
+                    nodes[updateNode.gridX, updateNode.gridY].gridID = -i;
                 }
             }
         }

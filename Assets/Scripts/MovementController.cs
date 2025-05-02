@@ -185,6 +185,14 @@ public class MovementController : MonoBehaviour
     public void SetLayer(int layer)
     {
         this.layer = layer;
-        spriteRenderer.sortingOrder = layer - 5;
+        
+        if ((layer - 1) % 3 != 0)
+        {
+            spriteRenderer.sortingOrder = layer - 4;
+        }
+        else
+        {
+            spriteRenderer.sortingOrder = layer - 5;
+        }
     }
 }

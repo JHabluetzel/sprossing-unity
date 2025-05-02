@@ -90,7 +90,15 @@ public class PlayerController : MovementController
 
                                 transform.position = targetPosition;
                                 layer = targetLayer;
-                                spriteRenderer.sortingOrder = layer - 5;
+
+                                if ((layer - 1) % 3 != 0)
+                                {
+                                    spriteRenderer.sortingOrder = layer - 4;
+                                }
+                                else
+                                {
+                                    spriteRenderer.sortingOrder = layer - 5;
+                                }
                             }
                         }
                     }
@@ -106,7 +114,15 @@ public class PlayerController : MovementController
 
                         transform.position = targetPosition;
                         layer = targetLayer;
-                        spriteRenderer.sortingOrder = layer - 5;
+
+                        if ((layer - 1) % 3 != 0)
+                        {
+                            spriteRenderer.sortingOrder = layer - 4;
+                        }
+                        else
+                        {
+                            spriteRenderer.sortingOrder = layer - 5;
+                        }
                     }
                 }
 

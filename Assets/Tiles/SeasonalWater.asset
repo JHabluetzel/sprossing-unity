@@ -1061,5 +1061,4 @@ MonoBehaviour:
     m_RuleTransform: 0
   tileType: 2
   season: 0
-  alwaysConnect: 0
   tilesToConnect: []
