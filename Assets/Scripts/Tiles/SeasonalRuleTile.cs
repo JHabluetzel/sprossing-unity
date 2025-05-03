@@ -64,7 +64,7 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
         return tilesToConnect.Contains(tile);
     }
 
-    public override bool GetTileAnimationData(Vector3Int position, ITilemap tilemap, ref TileAnimationData tileAnimationData)
+    /*public override bool GetTileAnimationData(Vector3Int position, ITilemap tilemap, ref TileAnimationData tileAnimationData)
     {
         Matrix4x4 transform = Matrix4x4.identity;
         foreach (TilingRule rule in m_TilingRules)
@@ -82,7 +82,7 @@ public class SeasonalRuleTile : RuleTile<SeasonalRuleTile.Neighbor>
             }
         }
         return false;
-    }
+    }*/
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {

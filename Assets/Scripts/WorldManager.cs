@@ -258,6 +258,18 @@ public class WorldManager : MonoBehaviour
 
                     if (tile != null && tile.tileType == TileType.Grass) //remove cliff
                     {
+                        for (int x = -1; x <= 1; x++)
+                        {
+                            for (int y = -1; y <= 1; y++)
+                            {
+                                tile = tilemaps[tileLayer + 3].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up + new Vector3Int(x, y, 0));
+                                if (tile != null && (tile.tileType == TileType.Water || tile.tileType == TileType.Cliff))
+                                {
+                                    return;
+                                }
+                            }
+                        }
+
                         tilemaps[tileLayer + 2].SetTile(tilePosition + Vector3Int.up, null);
                         tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, null); //remove overlay
                         tilemaps[tileLayer].SetTile(tilePosition, null);
@@ -269,7 +281,7 @@ public class WorldManager : MonoBehaviour
                     break;
             }
         }
-        else if (layer - 7 > 2)
+        else if (layer - 7 > 2) //add cliff
         {
             tileLayer -= 2;
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition - Vector3Int.up);
@@ -322,12 +334,18 @@ public class WorldManager : MonoBehaviour
         switch (tile.tileType)
         {
             case TileType.Grass: //add water
+                if (nodeGrid.GetNeighbors(nodeGrid.GetNodeFromWorldPosition(position), layer, true).Count < 8)
+                    return;
+                
                 tilemaps[tileLayer].SetTile(tilePosition, allTiles[1]);
                 tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[2]);
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
                 break;
             case TileType.Path: //add water
+                if (nodeGrid.GetNeighbors(nodeGrid.GetNodeFromWorldPosition(position), layer, true).Count < 8)
+                    return;
+
                 tilemaps[tileLayer - 1].SetTile(tilePosition, allTiles[1]);
                 tilemaps[tileLayer].SetTile(tilePosition, allTiles[2]);
 
