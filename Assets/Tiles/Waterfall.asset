@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c72535d6e674cbaabc303f4ed3aca9, type: 3}
   m_Name: Waterfall
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: -2023199858, guid: 4bfe9da48c2614fa4803c99d10324cea, type: 3}
+  m_DefaultSprite: {fileID: 1644869489, guid: 4bfe9da48c2614fa4803c99d10324cea, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
@@ -245,7 +245,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: -1, y: 1, z: 0}
     m_RuleTransform: 0
-  tileType: 2
+  tileType: 5
   season: 0
   tilesToConnect:
   - {fileID: 11400000, guid: 4bc1295ddfcd0430e9732373d2126611, type: 2}
