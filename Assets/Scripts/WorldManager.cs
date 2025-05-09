@@ -388,15 +388,14 @@ public class WorldManager : MonoBehaviour
         if ((layer - 1) % 3 != 0) //on ramp
             return;
 
-        int tileLayer = layer - 6;
+        int tileLayer = layer - 7;
 
         Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
 
-        SeasonalRuleTile tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
+        SeasonalRuleTile tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition);
 
         if (tile == null)
         {
-            tileLayer--;
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
         }
 
@@ -405,17 +404,6 @@ public class WorldManager : MonoBehaviour
             switch (tile.tileType)
             {
                 case TileType.Path: //place ramp
-                    tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
-                    if (tile != null && tile.tileType == TileType.Cliff)
-                    {
-                        tilemaps[tileLayer].SetTile(tilePosition, allTiles[4]);
-                        tilemaps[tileLayer].SetTile(tilePosition + Vector3Int.up, allTiles[4]);
-
-                        nodeGrid.UpdateNodeInGrid(position, tilePosition);
-                        nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
-                    }
-
-                    break;
                 case TileType.Grass: //place ramp
                     tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Cliff)
@@ -431,11 +419,11 @@ public class WorldManager : MonoBehaviour
                 case TileType.Cliff:
                     return;
                 case TileType.Ramp: //remove ramp
-                    tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+                    tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Ramp)
                     {
-                        tilemaps[tileLayer].SetTile(tilePosition, null);
-                        tilemaps[tileLayer].SetTile(tilePosition + Vector3Int.up, allTiles[1]);
+                        tilemaps[tileLayer + 1].SetTile(tilePosition, null);
+                        tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, allTiles[1]);
 
                         nodeGrid.UpdateNodeInGrid(position, tilePosition);
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
