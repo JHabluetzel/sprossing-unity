@@ -234,6 +234,10 @@ public class WorldManager : MonoBehaviour
                 case TileType.Grass:
                     if (layer - 4 >= tilemaps.Length)
                         return;
+
+                    tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+                    if (tile != null && tile.tileType == TileType.Waterfall)
+                        return;
                     
                     tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[1]);
                     tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[0]);
@@ -254,7 +258,7 @@ public class WorldManager : MonoBehaviour
                                 if (y == 0 || x == 0)
                                 {
                                     tile = tilemaps[tileLayer + 4].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up + new Vector3Int(x, y, 0));
-                                    if (tile != null && (tile.tileType == TileType.Water || tile.tileType == TileType.Cliff))
+                                    if (tile != null && (tile.tileType == TileType.Water || tile.tileType == TileType.Cliff || tile.tileType == TileType.Waterfall))
                                     {
                                         return;
                                     }
@@ -364,12 +368,54 @@ public class WorldManager : MonoBehaviour
                 }
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
+
                 break;
             case TileType.Water: //remove water
                 tilemaps[tileLayer + 1].SetTile(tilePosition, null);
                 tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
+
+                break;
+            case TileType.Waterfall: //remove water
+                if (tileLayer > 2)
+                {
+                    tile = tilemaps[tileLayer - 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down);
+
+                    if (tile != null && tile.tileType == TileType.Waterfall)
+                    {
+                        tilemaps[tileLayer + 1].SetTile(tilePosition, null);
+                        tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
+                        tilemaps[tileLayer - 2].SetTile(tilePosition + Vector3Int.down, allTiles[1]);
+
+                        nodeGrid.UpdateNodeInGrid(position, tilePosition);
+                    }
+                    else
+                    {
+                        tile = tilemaps[tileLayer + 3].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+                        if (tile != null && tile.tileType == TileType.Waterfall)
+                        {
+                            tilemaps[tileLayer + 1].SetTile(tilePosition, null);
+                            tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
+                            tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[1]);
+
+                            nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
+                        }
+                    }
+                }
+                else if (tileLayer < 9)
+                {
+                    tile = tilemaps[tileLayer + 4].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+                    if (tile != null && tile.tileType == TileType.Waterfall)
+                    {
+                        tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[1]);
+                        tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[0]);
+                        tilemaps[tileLayer + 4].SetTile(tilePosition + Vector3Int.up, null);
+
+                        nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
+                    }
+                }
+
                 break;
         }
     }
