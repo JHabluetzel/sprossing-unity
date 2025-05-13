@@ -192,15 +192,17 @@ public class WorldManager : MonoBehaviour
         if ((layer - 1) % 3 != 0) //on ramp
             return;
 
-        int tileLayer = layer - 6;
+        int tileLayer = layer - 7;
 
         Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
 
-        SeasonalRuleTile tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
+        if (tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition) != null)
+            return;
+
+        SeasonalRuleTile tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition);
 
         if (tile == null)
         {
-            tileLayer--;
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
         }
 
@@ -215,7 +217,7 @@ public class WorldManager : MonoBehaviour
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
                 break;
             case TileType.Path: //remove path
-                tilemaps[tileLayer].SetTile(tilePosition, null);
+                tilemaps[tileLayer + 1].SetTile(tilePosition, null);
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
                 break;
@@ -230,6 +232,9 @@ public class WorldManager : MonoBehaviour
         int tileLayer = layer - 7;
 
         Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
+
+        if (tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition) != null)
+            return;
 
         SeasonalRuleTile tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition);
 
@@ -260,6 +265,9 @@ public class WorldManager : MonoBehaviour
                     break;
                 case TileType.Cliff:
                     tile = tilemaps[tileLayer + 3].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
+
+                    if (tilemaps[tileLayer + 5].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up) != null)
+                        return;
 
                     if (tile != null && tile.tileType == TileType.Grass) //remove cliff
                     {
@@ -292,7 +300,11 @@ public class WorldManager : MonoBehaviour
         else if (layer - 7 > 2) //add cliff
         {
             tileLayer -= 3;
-            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition - Vector3Int.up);
+
+            if (tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down) != null)
+                return;
+
+            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down);
 
             if (tile == null)
             {
@@ -326,7 +338,7 @@ public class WorldManager : MonoBehaviour
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
         }
 
-        if (tile == null)
+        if (tile == null || tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition) != null)
             return;
 
         switch (tile.tileType)
@@ -448,12 +460,18 @@ public class WorldManager : MonoBehaviour
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
         }
 
+        if (tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition) != null)
+            return;
+
         if (tile != null)
         {
             switch (tile.tileType)
             {
                 case TileType.Path: //place ramp
                 case TileType.Grass:
+                    if (tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up) != null)
+                        return;
+
                     tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Cliff)
                     {
@@ -465,8 +483,6 @@ public class WorldManager : MonoBehaviour
                     }
 
                     break;
-                case TileType.Cliff:
-                    return;
                 case TileType.Ramp: //remove ramp
                     tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Ramp)
@@ -518,10 +534,13 @@ public class WorldManager : MonoBehaviour
             }
         }
 
+        Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
+
+        if (tilemaps[layer - 5].GetTile<SeasonalRuleTile>(tilePosition) != null)
+            return;
+
         GameObject newHouse = Instantiate(house, position, Quaternion.identity);
         newHouse.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
-
-        Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
 
         for (int x = -1; x <= 1; x++)
         {
