@@ -11,6 +11,8 @@ public class WorldManager : MonoBehaviour
 
     private Tilemap[] tilemaps;
 
+    [SerializeField] private Transform objectParent;
+
     private void Start()
     {
         tilemaps = new Tilemap[transform.childCount];
@@ -113,6 +115,12 @@ public class WorldManager : MonoBehaviour
             }
         }
 
+        foreach (Transform child in objectParent)
+        {
+            SpriteRenderer sprite = child.GetComponent<SpriteRenderer>();
+            saveData.objects.Add(new SavedObject(child.name, child.position, sprite.sortingOrder));
+        }
+
         SaveManager.SaveData(saveData);
     }
 
@@ -121,6 +129,11 @@ public class WorldManager : MonoBehaviour
         foreach (Tilemap tilemap in tilemaps)
         {
             tilemap.ClearAllTiles();
+        }
+
+        foreach (Transform child in objectParent)
+        {
+            Destroy(child.gameObject);
         }
     }
 
@@ -171,6 +184,13 @@ public class WorldManager : MonoBehaviour
             {
                 tilemaps[i].SetTile(savedTiles[j].position, allTiles[(int) savedTiles[j].tileType]);
             }
+        }
+
+        foreach (SavedObject child in saveData.objects)
+        {
+            GameObject newHouse = Resources.Load<GameObject>($"{child.prefabName}");
+            newHouse = Instantiate(newHouse, new Vector3(child.position[0], child.position[1], 0f), Quaternion.identity, objectParent);
+            newHouse.GetComponent<SpriteRenderer>().sortingOrder = child.layer;
         }
 
         nodeGrid.GenerateGrid();
@@ -539,7 +559,7 @@ public class WorldManager : MonoBehaviour
         if (tilemaps[layer - 5].GetTile<SeasonalRuleTile>(tilePosition) != null)
             return;
 
-        GameObject newHouse = Instantiate(house, position, Quaternion.identity);
+        GameObject newHouse = Instantiate(house, position, Quaternion.identity, objectParent);
         newHouse.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
 
         for (int x = -1; x <= 1; x++)

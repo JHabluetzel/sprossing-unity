@@ -13,6 +13,8 @@ public class SaveData
     public List<SavedTile> layer7;
     public List<SavedTile> layer8;
 
+    public List<SavedObject> objects;
+
     public float[] playerPosition;
     public int[] playerDirection;
 
@@ -20,6 +22,8 @@ public class SaveData
     {
         playerPosition = new float[2];
         playerDirection = new int[3];
+
+        objects = new List<SavedObject>();
 
         playerPosition[0] = player.transform.position.x;
         playerPosition[1] = player.transform.position.y;
