@@ -608,11 +608,11 @@ public class WorldManager : MonoBehaviour
             tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
         }
 
-
         Vector3 cellSize = GetComponent<Grid>().cellSize;
 
         if (tile != null)
         {
+            int found = 0;
             switch (tile.tileType)
             {
                 case TileType.Water: //place bridge
@@ -625,7 +625,10 @@ public class WorldManager : MonoBehaviour
                                 tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, direction.y * i, 0));
                                 if (i < 3 && (tile == null || tile.tileType != TileType.Water))
                                 {
-                                    return;
+                                    if (i > 1 )
+                                        found++;
+                                    else
+                                        return;
                                 }
                                 else if (i == 3 && tile != null && tile.tileType != TileType.Path)
                                 {
@@ -634,7 +637,7 @@ public class WorldManager : MonoBehaviour
                             }
                         }
 
-                        for (int i = 0; i < 3; i++)
+                        for (int i = 0; i < 3 - found / 3; i++)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition + direction * i, allTiles[6]);
                             tilemaps[tileLayer].SetTile(tilePosition + direction * i, allTiles[0]);
@@ -650,7 +653,10 @@ public class WorldManager : MonoBehaviour
                                 tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(direction.x * i, y, 0));
                                 if (i < 3 && (tile == null || tile.tileType != TileType.Water))
                                 {
-                                    return;
+                                    if (i > 1 )
+                                        found++;
+                                    else
+                                        return;
                                 }
                                 else if (i == 3 && tile != null && tile.tileType != TileType.Path)
                                 {
@@ -659,7 +665,7 @@ public class WorldManager : MonoBehaviour
                             }
                         }
 
-                        for (int i = 0; i < 3; i++)
+                        for (int i = 0; i < 3 - found / 3; i++)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition + direction * i, allTiles[6]);
                             tilemaps[tileLayer].SetTile(tilePosition + direction * i, allTiles[0]);
@@ -668,19 +674,20 @@ public class WorldManager : MonoBehaviour
                         }
                     }
 
-                    Debug.Log("Place Bridge");
                     break;
                 case TileType.Bridge: //remove bridge
+                    int toRemove = 1;
                     for (int i = 1; i < 3; i++)
                     {
                         tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + direction * i);
-                        if (tile == null || tile.tileType != TileType.Bridge)
-                        {
-                            return;
-                        }
+                        if (tile != null && tile.tileType == TileType.Bridge)
+                            toRemove++;
                     }
 
-                    for (int i = 0; i < 3; i++)
+                    if (toRemove < 2)
+                        return;
+
+                    for (int i = 0; i < toRemove; i++)
                     {
                         tilemaps[tileLayer + 1].SetTile(tilePosition + direction * i, allTiles[2]);
                         tilemaps[tileLayer].SetTile(tilePosition + direction * i, allTiles[1]);
@@ -692,7 +699,6 @@ public class WorldManager : MonoBehaviour
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(direction.x * cellSize.x * i, 0f, 0f), tilePosition + direction * i);
                     }
 
-                    Debug.Log("Remove Bridge");
                     break;
             }
         }
