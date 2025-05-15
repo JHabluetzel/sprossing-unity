@@ -623,7 +623,7 @@ public class WorldManager : MonoBehaviour
                             for (int i = 0; i < 4; i++)
                             {
                                 tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, direction.y * i, 0));
-                                if (i < 3 && (tile == null || tile.tileType != TileType.Water))
+                                if (i < 3 && (tile == null || tile.tileType != TileType.Water || tile.tileType != TileType.Waterfall))
                                 {
                                     if (i > 1 )
                                         found++;
@@ -651,7 +651,7 @@ public class WorldManager : MonoBehaviour
                             for (int i = 0; i < 4; i++)
                             {
                                 tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(direction.x * i, y, 0));
-                                if (i < 3 && (tile == null || tile.tileType != TileType.Water))
+                                if (i < 3 && (tile == null || tile.tileType != TileType.Water || tile.tileType != TileType.Waterfall))
                                 {
                                     if (i > 1 )
                                         found++;
