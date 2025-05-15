@@ -175,4 +175,12 @@ public class PlayerController : MovementController
 
         worldManager.PlaceHouse(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer, house);
     }
+
+    public void PlaceBridge()
+    {
+        if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
+            return;
+
+        worldManager.PlaceBridge(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer, LastDirection);
+    }
 }

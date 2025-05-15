@@ -584,4 +584,91 @@ public class WorldManager : MonoBehaviour
 
         return randomNode.worldPosition;
     }
+
+    public void PlaceBridge(Vector3 position, int layer, Vector3Int direction)
+    {
+        if ((layer - 1) % 3 != 0) //on ramp
+            return;
+
+        int tileLayer = layer - 7;
+
+        Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
+
+        if (tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition) != null)
+            return;
+
+        SeasonalRuleTile tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition);
+
+        if (tile == null)
+        {
+            tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
+        }
+
+        Vector3 cellSize = GetComponent<Grid>().cellSize;
+
+        if (tile != null)
+        {
+            switch (tile.tileType)
+            {
+                case TileType.Water: //place bridge
+                    if (direction.x == 0) //up or down
+                    {
+                        for (int x = -1; x <= 1; x++)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, direction.y * i, 0));
+                                if (i < 3 && (tile == null || tile.tileType != TileType.Water))
+                                {
+                                    return;
+                                }
+                                else if (i == 3 && tile != null && tile.tileType != TileType.Path)
+                                {
+                                    return;
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            tilemaps[tileLayer + 1].SetTile(tilePosition + direction * i, allTiles[6]);
+                            tilemaps[tileLayer].SetTile(tilePosition + direction * i, allTiles[0]);
+                            nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, direction.y * cellSize.y * i, 0f), tilePosition + direction * i);
+                        }
+                    }
+                    else //left or right
+                    {
+                        for (int y = -1; y <= 1; y++)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(direction.x * i, y, 0));
+                                if (i < 3 && (tile == null || tile.tileType != TileType.Water))
+                                {
+                                    return;
+                                }
+                                else if (i == 3 && tile != null && tile.tileType != TileType.Path)
+                                {
+                                    return;
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            tilemaps[tileLayer + 1].SetTile(tilePosition + direction * i, allTiles[6]);
+                            tilemaps[tileLayer].SetTile(tilePosition + direction * i, allTiles[0]);
+                            tilemaps[tileLayer + 2].SetTile(tilePosition + direction * i + Vector3Int.down, allTiles[6]);
+                            nodeGrid.UpdateNodeInGrid(position + new Vector3(direction.x * cellSize.x * i, 0f, 0f), tilePosition + direction * i);
+                        }
+                    }
+
+                    Debug.Log("Place Bridge");
+                    break;
+                case TileType.Bridge: //remove ramp
+                    Debug.Log("Place Ramp");
+                    break;
+            }
+        }
+    }
 }
