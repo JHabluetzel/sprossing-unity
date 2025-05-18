@@ -535,7 +535,7 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    public void PlaceHouse(Vector3 position, int layer, GameObject house)
+    public void PlaceHouse(Vector3 position, int layer)
     {
         if ((layer - 1) % 3 != 0) //on ramp
             return;
@@ -559,8 +559,9 @@ public class WorldManager : MonoBehaviour
         if (tilemaps[layer - 5].GetTile<SeasonalRuleTile>(tilePosition) != null)
             return;
 
-        GameObject newHouse = Instantiate(house, position, Quaternion.identity, objectParent);
-        newHouse.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
+        GameObject house = Resources.Load<GameObject>("House");
+        house = Instantiate(house, position, Quaternion.identity, objectParent);
+        house.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
 
         for (int x = -1; x <= 1; x++)
         {
@@ -585,7 +586,7 @@ public class WorldManager : MonoBehaviour
         return randomNode.worldPosition;
     }
 
-    public void PlaceBridge(Vector3 position, int layer, Vector3Int direction, int witdh)
+    public void PlaceBridge(Vector3 position, int layer, Vector3Int direction, int width)
     {
         if ((layer - 1) % 3 != 0) //on ramp
             return;
@@ -618,14 +619,14 @@ public class WorldManager : MonoBehaviour
                 case TileType.Water: //place bridge
                     if (direction.x == 0) //up or down
                     {
-                        for (int x = -1; x <= witdh; x++)
+                        for (int x = -1; x <= width; x++)
                         {
                             for (int i = 0; i < 4; i++)
                             {
                                 tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, direction.y * i, 0));
                                 if (i < 3 && (tile == null || (tile.tileType != TileType.Water && tile.tileType != TileType.Waterfall)))
                                 {
-                                    if (i > 1 )
+                                    if (i > 1)
                                         found++;
                                     else
                                         return;
@@ -639,24 +640,28 @@ public class WorldManager : MonoBehaviour
 
                         for (int i = 0; i < 3 - found / 3; i++)
                         {
-                            for (int w = 0; w < witdh; w++)
+                            for (int w = 0; w < width; w++)
                             {
-                                tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(w, direction.y * i, 0), allTiles[6]);
+                                tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(w, direction.y * i, 0), null);
                                 tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(w, direction.y * i, 0), allTiles[0]);
                                 nodeGrid.UpdateNodeInGrid(position + new Vector3(w, direction.y * cellSize.y * i, 0f), tilePosition + direction * i);
                             }
                         }
+
+                        GameObject bridge = Resources.Load<GameObject>($"BridgeV{width}{3 - found / 3}");
+                        bridge = Instantiate(bridge, position + (3 - found / 3) / 3 * cellSize.y * 0.5f * (Vector3) direction, Quaternion.identity, objectParent);
+                        bridge.GetComponent<SpriteRenderer>().sortingOrder = layer - 6;
                     }
                     else //left or right
                     {
-                        for (int y = -1; y <= witdh; y++)
+                        for (int y = -1; y <= width; y++)
                         {
                             for (int i = 0; i < 4; i++)
                             {
                                 tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(direction.x * i, y, 0));
                                 if (i < 3 && (tile == null || (tile.tileType != TileType.Water && tile.tileType != TileType.Waterfall)))
                                 {
-                                    if (i > 1 )
+                                    if (i > 1)
                                         found++;
                                     else
                                         return;
@@ -670,46 +675,17 @@ public class WorldManager : MonoBehaviour
 
                         for (int i = 0; i < 3 - found / 3; i++)
                         {
-                            for (int w = 0; w < witdh; w++)
+                            for (int w = 0; w < width; w++)
                             {
-                                tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(direction.x * i, w, 0), allTiles[6]);
+                                tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(direction.x * i, w, 0), null);
                                 tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(direction.x * i, w, 0), allTiles[0]);
                                 nodeGrid.UpdateNodeInGrid(position + new Vector3(direction.x * cellSize.x * i, w, 0f), tilePosition + direction * i);
                             }
-
-                            tilemaps[tileLayer + 2].SetTile(tilePosition + new Vector3Int(direction.x * i, -1, 0), allTiles[6]);
-                        }
-                    }
-
-                    break;
-                case TileType.Bridge: //remove bridge
-                    int toRemove = 1;
-                    for (int i = 1; i < 3; i++)
-                    {
-                        tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + direction * i);
-                        if (tile != null && tile.tileType == TileType.Bridge)
-                            toRemove++;
-                    }
-
-                    if (toRemove < 2)
-                        return;
-
-                    for (int i = 0; i < toRemove; i++)
-                    {
-                        tilemaps[tileLayer + 1].SetTile(tilePosition + direction * i, allTiles[2]);
-                        tilemaps[tileLayer].SetTile(tilePosition + direction * i, allTiles[1]);
-                        if (direction.x != 0)
-                        {
-                            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + direction * i + Vector3Int.up);
-                            if (tile != null && tile.tileType == TileType.Bridge)
-                            {
-                                tilemaps[tileLayer + 2].SetTile(tilePosition + direction * i, allTiles[6]);
-                            }
-
-                            tilemaps[tileLayer + 2].SetTile(tilePosition + direction * i + Vector3Int.down, null);
                         }
 
-                        nodeGrid.UpdateNodeInGrid(position + new Vector3(direction.x * cellSize.x * i, 0f, 0f), tilePosition + direction * i);
+                        GameObject bridge = Resources.Load<GameObject>($"BridgeH{width}{3 - found / 3}");
+                        bridge = Instantiate(bridge, position + (Vector3) direction * ((3 - found / 3) / 2f - cellSize.x * 0.5f), Quaternion.identity, objectParent);
+                        bridge.GetComponent<SpriteRenderer>().sortingOrder = layer - 6;
                     }
 
                     break;

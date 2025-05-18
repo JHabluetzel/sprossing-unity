@@ -168,12 +168,12 @@ public class PlayerController : MovementController
         worldManager.PlaceRemoveRamp(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
     }
 
-    public void PlaceHouse(GameObject house)
+    public void PlaceHouse()
     {
         if (LastDirection.x != 0 || LastDirection.y != 1) //not facing up
             return;
 
-        worldManager.PlaceHouse(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer, house);
+        worldManager.PlaceHouse(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
     }
 
     public void PlaceBridge(int width)

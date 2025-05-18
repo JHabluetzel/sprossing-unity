@@ -178,15 +178,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: structures_2
+      name: structures_4
       rect:
         serializedVersion: 2
         x: 45
-        y: 120
-        width: 15
-        height: 12
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        y: 102
+        width: 30
+        height: 18
+      alignment: 9
+      pivot: {x: 0.5, y: 0.33333334}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -199,34 +199,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: structures_3
-      rect:
-        serializedVersion: 2
-        x: 60
-        y: 120
-        width: 15
-        height: 12
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f32e5958d44eb4c57a1aeda6fe74cc24
-      internalID: -1820026334
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: structures_4
+      name: structures_5
       rect:
         serializedVersion: 2
         x: 75
-        y: 120
+        y: 96
         width: 15
-        height: 12
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,15 +220,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: structures_5
+      name: structures_2
       rect:
         serializedVersion: 2
         x: 45
-        y: 132
-        width: 15
-        height: 12
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        y: 126
+        width: 45
+        height: 18
+      alignment: 9
+      pivot: {x: 0.5, y: 0.33333334}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -262,13 +241,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: structures_6
+      name: structures_3
       rect:
         serializedVersion: 2
-        x: 60
-        y: 132
+        x: 90
+        y: 108
         width: 15
-        height: 12
+        height: 36
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -295,11 +274,10 @@ TextureImporter:
     nameFileIdTable:
       structures_0: -955485601
       structures_1: 1578839093
-      structures_2: -1574722500
-      structures_3: -1820026334
-      structures_4: 1939694218
-      structures_5: -1845749928
-      structures_6: 557446355
+      structures_2: -1845749928
+      structures_3: 557446355
+      structures_4: -1574722500
+      structures_5: 1939694218
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
