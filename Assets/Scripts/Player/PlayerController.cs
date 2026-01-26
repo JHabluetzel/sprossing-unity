@@ -162,12 +162,12 @@ public class PlayerController : MovementController
         worldManager.Waterscape(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
     }
 
-    public void Ramp()
+    public void PlaceRamp()
     {
         if (LastDirection.x != 0) //not facing right direction
             return;
 
-        worldManager.PlaceRemoveRamp(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        worldManager.PlaceRamp(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
     }
 
     public void PlaceHouse()

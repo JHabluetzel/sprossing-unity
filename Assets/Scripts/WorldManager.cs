@@ -188,12 +188,52 @@ public class WorldManager : MonoBehaviour
 
         foreach (SavedObject child in saveData.objects)
         {
-            GameObject newHouse = Resources.Load<GameObject>($"{child.prefabName}");
+            Structure newHouse = Resources.Load<Structure>($"{child.prefabName}");
             newHouse = Instantiate(newHouse, new Vector3(child.position[0], child.position[1], 0f), Quaternion.identity, objectParent);
             newHouse.GetComponent<SpriteRenderer>().sortingOrder = child.layer;
         }
 
         nodeGrid.GenerateGrid();
+    }
+
+    public void RemoveStructures()
+    {
+        for (int i = 0; i < objectParent.transform.childCount; i++)
+        {
+            Structure structure = objectParent.GetChild(i).GetComponent<Structure>();
+            Vector3 position = objectParent.GetChild(i).position;
+            Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
+
+            int layer = structure.GetComponent<SpriteRenderer>().sortingOrder;
+
+            Vector3 cellSize = GetComponent<Grid>().cellSize;
+
+            if (structure.CompareTag("House"))
+            {
+                for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
+                {
+                    for (int y = structure.bottomLeft.y; y < structure.bottomLeft.y + structure.size.y; y++)
+                    {
+                        tilemaps[layer].SetTile(tilePosition + new Vector3Int(x, y, 0), null);
+                        nodeGrid.UpdateNodeInGrid(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
+                    }
+                }
+            }
+            else if (structure.CompareTag("Bridge"))
+            {
+                for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
+                {
+                    for (int y = structure.bottomLeft.y; y < structure.bottomLeft.y + structure.size.y; y++)
+                    {
+                        tilemaps[layer].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[2]);
+                        tilemaps[layer - 1].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[1]);
+                        nodeGrid.UpdateNodeInGrid(position + new Vector3(x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
+                    }
+                }
+            }
+
+            Destroy(structure.gameObject);
+        }
     }
 
     public int GetPositionLevel(Vector3 position, int layer, Vector3Int direction)
@@ -464,7 +504,7 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    public void PlaceRemoveRamp(Vector3 position, int layer)
+    public void PlaceRamp(Vector3 position, int layer)
     {
         if ((layer - 1) % 3 != 0) //on ramp
             return;
@@ -503,7 +543,7 @@ public class WorldManager : MonoBehaviour
                     }
 
                     break;
-                case TileType.Ramp: //remove ramp
+                /*case TileType.Ramp: //remove ramp
                     tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Ramp)
                     {
@@ -514,7 +554,7 @@ public class WorldManager : MonoBehaviour
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
                     }
 
-                    break;
+                    break;*/
             }
         }
         else if (tileLayer > 0)
@@ -559,7 +599,7 @@ public class WorldManager : MonoBehaviour
         if (tilemaps[layer - 5].GetTile<SeasonalRuleTile>(tilePosition) != null)
             return;
 
-        GameObject house = Resources.Load<GameObject>("House");
+        Structure house = Resources.Load<Structure>("House");
         house = Instantiate(house, position, Quaternion.identity, objectParent);
         house.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
 
@@ -640,17 +680,17 @@ public class WorldManager : MonoBehaviour
 
                         int length = 3 - found / 3;
 
-                        for (int i = 0; i < length; i++)
+                        for (int x = 0; x < width; x++)
                         {
-                            for (int w = 0; w < width; w++)
+                            for (int y = 0; y < length; y++)
                             {
-                                tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(w, direction.y * i, 0), null);
-                                tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(w, direction.y * i, 0), allTiles[0]);
-                                nodeGrid.UpdateNodeInGrid(position + new Vector3(w, direction.y * cellSize.y * i, 0f), tilePosition + direction * i);
+                                tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), null);
+                                tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), allTiles[0]);
+                                nodeGrid.UpdateNodeInGrid(position + new Vector3(x, direction.y * cellSize.y * y, 0f), tilePosition + direction * y);
                             }
                         }
 
-                        GameObject bridge = Resources.Load<GameObject>($"BridgeV{width}{length}");
+                        Structure bridge = Resources.Load<Structure>($"BridgeV{width}{length}");
                         if (bridge == null)
                         {
                             Debug.Log($"BridgeV{width}{length}");
@@ -700,7 +740,7 @@ public class WorldManager : MonoBehaviour
                             }
                         }
 
-                        GameObject bridge = Resources.Load<GameObject>($"BridgeH{width}{3 - found / 3}");
+                        Structure bridge = Resources.Load<Structure>($"BridgeH{width}{3 - found / 3}");
                         if (bridge == null)
                         {
                             Debug.Log($"BridgeV{width}{3 - found / 3}");
