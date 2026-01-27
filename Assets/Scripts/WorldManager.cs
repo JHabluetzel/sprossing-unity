@@ -74,9 +74,9 @@ public class WorldManager : MonoBehaviour
             List<SavedTile> tiles = new List<SavedTile>();
             BoundsInt bounds = tilemaps[i].cellBounds;
 
-            for (int x = bounds.xMin; x < bounds.xMax; x++)
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
-                for (int y = bounds.yMin; y < bounds.yMax; y++)
+                for (int x = bounds.xMin; x < bounds.xMax; x++)
                 {
                     SavedTile savedTile = new SavedTile();
                     SeasonalRuleTile ruleTile = tilemaps[i].GetTile<SeasonalRuleTile>(new Vector3Int(x, y, 0));
@@ -213,9 +213,9 @@ public class WorldManager : MonoBehaviour
 
             if (structure.CompareTag("House"))
             {
-                for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
+                for (int y = structure.bottomLeft.y; y < structure.bottomLeft.y + structure.size.y; y++)
                 {
-                    for (int y = structure.bottomLeft.y; y < structure.bottomLeft.y + structure.size.y; y++)
+                    for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
                     {
                         tilemaps[layer].SetTile(tilePosition + new Vector3Int(x, y, 0), null);
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
@@ -224,9 +224,9 @@ public class WorldManager : MonoBehaviour
             }
             else if (structure.CompareTag("Bridge"))
             {
-                for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
+                for (int y = structure.bottomLeft.y; y < structure.bottomLeft.y + structure.size.y; y++)
                 {
-                    for (int y = structure.bottomLeft.y; y < structure.bottomLeft.y + structure.size.y; y++)
+                    for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
                     {
                         tilemaps[layer].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[2]);
                         tilemaps[layer - 1].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[1]);
@@ -350,9 +350,9 @@ public class WorldManager : MonoBehaviour
 
                     if (tile != null && tile.tileType == TileType.Grass) //remove cliff
                     {
-                        for (int x = -1; x <= 1; x++)
+                        for (int y = -1; y <= 1; y++)
                         {
-                            for (int y = -1; y <= 1; y++)
+                            for (int x = -1; x <= 1; x++)
                             {
                                 if (y == 0 || x == 0)
                                 {
@@ -432,9 +432,9 @@ public class WorldManager : MonoBehaviour
             case TileType.Grass: //add water
                 bool invalidNeighbor = false;
 
-                for (int x = -1; x <= 1; x++)
+                for (int y = -1; y <= 1; y++)
                 {
-                    for (int y = -1; y <= 1; y++)
+                    for (int x = -1; x <= 1; x++)
                     {
                         if (y == 0 || x == 0)
                         {
@@ -619,9 +619,9 @@ public class WorldManager : MonoBehaviour
             return;
         }
 
-        for (int x = -1; x <= 1; x++)
+        for (int y = 0; y <= 1; y++)
         {
-            for (int y = 0; y <= 1; y++)
+            for (int x = -1; x <= 1; x++)
             {
                 Node checkNode = nodeGrid.GetNodeFromWorldPosition(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f));
                 if (checkNode.gridID != layer)
@@ -642,9 +642,9 @@ public class WorldManager : MonoBehaviour
         house = Instantiate(house, position, Quaternion.identity, objectParent);
         house.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
 
-        for (int x = -1; x <= 1; x++)
+        for (int y = 0; y <= 1; y++)
         {
-            for (int y = 0; y <= 1; y++)
+            for (int x = -1; x <= 1; x++)
             {
                 tilemaps[layer - 5].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[1]);
                 nodeGrid.UpdateNodeInGrid(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
@@ -702,14 +702,14 @@ public class WorldManager : MonoBehaviour
 
                 if (direction.x == 0) //up or down
                 {
-                    for (int x = -1; x <= width; x++)
+                    for (int w = -1; w <= width; w++)
                     {
                         int temp = 0;
                         for (int i = 0; i < 3; i++)
                         {
                             temp = i;
                             
-                            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, direction.y * i, 0));
+                            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(w, direction.y * i, 0));
                             if (tile == null || (tile.tileType != TileType.Water && tile.tileType != TileType.Waterfall))
                             {
                                 temp--;
@@ -747,9 +747,9 @@ public class WorldManager : MonoBehaviour
                         return;
                     }
 
-                    for (int x = 0; x < width; x++)
+                    for (int y = 0; y < length; y++)
                     {
-                        for (int y = 0; y < length; y++)
+                        for (int x = 0; x < width; x++)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), null);
                             tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), allTiles[0]);
@@ -771,14 +771,14 @@ public class WorldManager : MonoBehaviour
                 }
                 else //left or right
                 {
-                    for (int y = -1; y <= width; y++)
+                    for (int w = -1; w <= width; w++)
                     {
                         int temp = 0;
                         for (int i = 0; i < 3; i++)
                         {
                             temp = i;
 
-                            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(direction.x * i, y, 0));
+                            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(direction.x * i, w, 0));
                             if (tile == null || (tile.tileType != TileType.Water && tile.tileType != TileType.Waterfall))
                             {
                                 temp--;
@@ -816,9 +816,9 @@ public class WorldManager : MonoBehaviour
                         return;
                     }
 
-                    for (int y = 0; y < length; y++)
+                    for (int x = 0; x < width; x++)
                     {
-                        for (int x = 0; x < width; x++)
+                        for (int y = 0; y < length; y++)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(direction.x * y, x, 0), null);
                             tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(direction.x * y, x, 0), allTiles[0]);

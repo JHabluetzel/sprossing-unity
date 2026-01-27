@@ -49,9 +49,9 @@ public class NodeGrid : MonoBehaviour
         nodes = new Node[gridSize.x, gridSize.y];
         string temp = "";
 
-        for (int x = 0; x < gridSize.x; x++)
+        for (int y = 0; y < gridSize.y; y++)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = 0; x < gridSize.x; x++)
             {
                 for (int i = 0; i < tilemaps.Length; i += 3) //bottom to top
                 {
@@ -154,9 +154,9 @@ public class NodeGrid : MonoBehaviour
     {
         List<Node> neighbors = new List<Node>();
 
-        for (int x = -1; x <= 1; x++)
+        for (int y = -1; y <= 1; y++)
         {
-            for (int y = -1; y <= 1; y++)
+            for (int x = -1; x <= 1; x++)
             {
                 if (x != 0 || y != 0)
                 {
