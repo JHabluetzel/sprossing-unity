@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -19,9 +20,8 @@ public class NodeGrid : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
-        gridSize = Vector2Int.zero;
         tilemaps = new Tilemap[grid.transform.childCount];
 
         for (int i = 0; i < grid.transform.childCount; i++)
@@ -40,12 +40,13 @@ public class NodeGrid : MonoBehaviour
         }
 
         bottomLeft = new Vector3(-gridSize.x / 2f * grid.cellSize.x + grid.cellSize.x, -gridSize.y / 2f * grid.cellSize.y, 0f);
-
-        GenerateGrid();
     }
 
     public void GenerateGrid()
     {
+        Debug.Log(gridSize);
+        Debug.Log(bottomLeft);
+
         nodes = new Node[gridSize.x, gridSize.y];
         string temp = "";
 
@@ -186,6 +187,11 @@ public class NodeGrid : MonoBehaviour
     {
         Node updateNode = GetNodeFromWorldPosition(worldPosition);
 
+        if (updateNode == null)
+        {
+            return;
+        }
+
         nodes[updateNode.gridX, updateNode.gridY] = null;
 
         for (int i = 0; i < tilemaps.Length; i += 3) //bottom to top
@@ -257,5 +263,25 @@ public class NodeGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool IsOnBorder(Vector3Int tilePosition)
+    {
+        if (Math.Abs(tilePosition.y) == gridSize.y / 2 - 1)
+        {
+            return true;
+        }
+        
+        if (tilePosition.x == gridSize.x / -2)
+        {
+            return true;
+        }
+
+        if (tilePosition.x == gridSize.x / 2 - 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

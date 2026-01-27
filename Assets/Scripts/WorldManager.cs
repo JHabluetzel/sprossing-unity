@@ -29,6 +29,12 @@ public class WorldManager : MonoBehaviour
             ClearMap();
             LoadMap(GlobalManager.singleton.saveData);
         }
+        else
+        {
+            //create world
+            //set tiles
+            nodeGrid.GenerateGrid();
+        }
     }
 
     private void Update()
@@ -322,7 +328,7 @@ public class WorldManager : MonoBehaviour
             {
                 case TileType.Path: //add cliff
                 case TileType.Grass:
-                    if (layer - 4 >= tilemaps.Length)
+                    if (layer - 4 >= tilemaps.Length || nodeGrid.IsOnBorder(tilePosition))
                     {
                         return;
                     }
