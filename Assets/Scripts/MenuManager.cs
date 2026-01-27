@@ -1,10 +1,32 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-    public void PlayGame()
+    [SerializeField] private Button loadButton;
+    [SerializeField] private Button deleteButton;
+
+    private void Start()
     {
-        SceneManager.LoadScene("GameScene");
+        loadButton.interactable = SaveManager.HasSaveData();
+        deleteButton.interactable = SaveManager.HasSaveData();
+    }
+
+    public void NewGame()
+    {
+        GlobalManager.singleton.LoadScene("GameScene");
+    }
+
+    public void LoadGame()
+    {
+        GlobalManager.singleton.LoadData();
+        GlobalManager.singleton.LoadScene("GameScene");
+    }
+
+    public void Delete()
+    {
+        SaveManager.DeleteData();
+        loadButton.interactable = false;
+        deleteButton.interactable = false;
     }
 }

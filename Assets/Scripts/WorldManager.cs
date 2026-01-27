@@ -23,6 +23,12 @@ public class WorldManager : MonoBehaviour
         }
 
         cellSize = GetComponent<Grid>().cellSize;
+
+        if (GlobalManager.singleton.saveData != null)
+        {
+            ClearMap();
+            LoadMap(GlobalManager.singleton.saveData);
+        }
     }
 
     private void Update()
@@ -139,15 +145,10 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    public void LoadMap()
+    private void LoadMap(SaveData saveData)
     {
-        SaveData saveData = SaveManager.LoadData();
-
-        ClearMap();
-
+        player.Initialize(saveData.playerDirection, saveData.playerDirection[2]);
         player.transform.position = new Vector3(saveData.playerPosition[0], saveData.playerPosition[1], 0f);
-        player.SetLastDirection(saveData.playerDirection);
-        player.SetLayer(saveData.playerDirection[2]);
 
         for (int i = 0; i < tilemaps.Length; i++)
         {
@@ -830,5 +831,10 @@ public class WorldManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ReturnToMenu()
+    {
+        GlobalManager.singleton.LoadScene("MenuScene");
     }
 }

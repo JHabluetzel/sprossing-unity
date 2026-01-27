@@ -12,8 +12,15 @@ public class MovementController : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     public int layer;
 
+    private bool wasInit;
+
     private void Start()
     {
+        if (wasInit)
+        {
+            return;
+        }
+
         animator = GetComponent<AnimationController>();
 
         LastDirection = new Vector3Int(0, -1, 0);
@@ -21,6 +28,22 @@ public class MovementController : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         layer = spriteRenderer.sortingOrder + 5;
+    }
+
+    //can run before Start() is called
+    public void Initialize(int[] direction, int layer)
+    {
+        animator = GetComponent<AnimationController>();
+
+        LastDirection = new Vector3Int(direction[0], direction[1], 0);
+        animator.PlayIdleAnimation(GetDirection(LastDirection));
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = layer - 5;
+        
+        this.layer = layer;
+
+        wasInit = true;
     }
 
     protected string GetDirection(Vector3Int direction)
@@ -176,12 +199,6 @@ public class MovementController : MonoBehaviour
         }
 
         return turns;
-    }
-
-    public void SetLastDirection(int[] direction)
-    {
-        LastDirection = new Vector3Int(direction[0], direction[1], 0);
-        animator.PlayIdleAnimation(GetDirection(LastDirection));
     }
 
     public void SetLayer(int layer)

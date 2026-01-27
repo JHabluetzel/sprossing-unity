@@ -16,11 +16,15 @@ MonoBehaviour:
   m_TableCollectionNameGuidString: a106a2ee951f3453aa8fb5d71c97457c
   m_Entries:
   - m_Id: 155154636800
-    m_Key: save
+    m_Key: loadGame
     m_Metadata:
       m_Items: []
   - m_Id: 205339484160
-    m_Key: playGame
+    m_Key: newGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101035335750770688
+    m_Key: delete
     m_Metadata:
       m_Items: []
   m_Metadata:

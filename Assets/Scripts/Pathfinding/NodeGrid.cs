@@ -19,7 +19,7 @@ public class NodeGrid : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Start()
     {
         gridSize = Vector2Int.zero;
         tilemaps = new Tilemap[grid.transform.childCount];

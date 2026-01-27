@@ -18,9 +18,14 @@ public static class SaveManager
 
     public static void DeleteData()
     {
-        if (File.Exists(filePath))
+        if (HasSaveData())
         {
             File.Delete(filePath);
         }
+    }
+
+    public static bool HasSaveData()
+    {
+        return File.Exists(filePath);
     }
 }

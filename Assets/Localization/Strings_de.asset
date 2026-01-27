@@ -19,11 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 155154636800
-    m_Localized: Speichern
+    m_Localized: Spiel laden
     m_Metadata:
       m_Items: []
   - m_Id: 205339484160
-    m_Localized: Spielen
+    m_Localized: Neues Spiel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101035335750770688
+    m_Localized: "L\xF6schen"
     m_Metadata:
       m_Items: []
   references:

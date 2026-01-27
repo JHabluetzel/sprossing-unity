@@ -19,11 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 155154636800
-    m_Localized: Save
+    m_Localized: Load Game
     m_Metadata:
       m_Items: []
   - m_Id: 205339484160
-    m_Localized: Play Game
+    m_Localized: New Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101035335750770688
+    m_Localized: Delete
     m_Metadata:
       m_Items: []
   references:
