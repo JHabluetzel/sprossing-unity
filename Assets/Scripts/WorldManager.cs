@@ -15,13 +15,7 @@ public class WorldManager : MonoBehaviour
 
     private void Start()
     {
-        tilemaps = new Tilemap[transform.childCount];
-
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            tilemaps[i] = transform.GetChild(i).GetComponent<Tilemap>();
-        }
-
+        tilemaps = transform.GetComponentsInChildren<Tilemap>();
         cellSize = GetComponent<Grid>().cellSize;
 
         if (GlobalManager.singleton.saveData != null)
@@ -33,7 +27,7 @@ public class WorldManager : MonoBehaviour
         {
             //create world
             //set tiles
-            nodeGrid.GenerateGrid();
+            nodeGrid.GenerateGrid(new Vector2Int(20, 18));
         }
     }
 
@@ -41,7 +35,7 @@ public class WorldManager : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.N))
         {
-            Seasons newSeason = allTiles[0].season;
+            Seasons newSeason = allTiles[(int)TileType.Grass].season;
 
             switch (newSeason)
             {
@@ -73,7 +67,7 @@ public class WorldManager : MonoBehaviour
 
     public void SaveMap()
     {
-        SaveData saveData = new SaveData(player);
+        SaveData saveData = new SaveData(nodeGrid.gridSize, player);
 
         for (int i = 0; i < tilemaps.Length; i++)
         {
@@ -204,7 +198,7 @@ public class WorldManager : MonoBehaviour
             newHouse.GetComponent<SpriteRenderer>().sortingOrder = child.layer;
         }
 
-        nodeGrid.GenerateGrid();
+        nodeGrid.GenerateGrid(new Vector2Int(saveData.gridSize[0], saveData.gridSize[1]));
     }
 
     public void RemoveStructures()
@@ -234,8 +228,8 @@ public class WorldManager : MonoBehaviour
                 {
                     for (int x = structure.bottomLeft.x; x < structure.bottomLeft.x + structure.size.x; x++)
                     {
-                        tilemaps[layer].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[2]);
-                        tilemaps[layer - 1].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[1]);
+                        tilemaps[layer].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[(int)TileType.Water]);
+                        tilemaps[layer - 1].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[(int)TileType.Cliff]);
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
                     }
                 }
@@ -287,7 +281,7 @@ public class WorldManager : MonoBehaviour
         switch (tile.tileType)
         {
             case TileType.Grass: //add path
-                tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[3]);
+                tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Path]);
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
                 break;
@@ -338,9 +332,25 @@ public class WorldManager : MonoBehaviour
                     {
                         return;
                     }
-                    
-                    tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[1]);
-                    tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[0]);
+
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        for (int x = -1; x <= 1; x++)
+                        {
+                            if (y == 0 || x == 0)
+                            {
+                                SeasonalRuleTile tileB = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, y, 0));
+                                if (tileB != null && (tileB.tileType == TileType.Water || tileB.tileType == TileType.Waterfall))
+                                {
+                                    
+                                }
+                                return;
+                            }
+                        }
+                    }
+
+                    tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Cliff]);
+                    tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[(int)TileType.Grass]);
 
                     nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
                     nodeGrid.UpdateNodeInGrid(position, tilePosition);
@@ -400,8 +410,8 @@ public class WorldManager : MonoBehaviour
 
             if (tile != null && (tile.tileType == TileType.Grass || tile.tileType == TileType.Ramp))
             {
-                tilemaps[tileLayer + 1].SetTile(tilePosition - Vector3Int.up, allTiles[1]);
-                tilemaps[tileLayer + 3].SetTile(tilePosition, allTiles[0]);
+                tilemaps[tileLayer + 1].SetTile(tilePosition - Vector3Int.up, allTiles[(int)TileType.Cliff]);
+                tilemaps[tileLayer + 3].SetTile(tilePosition, allTiles[(int)TileType.Grass]);
 
                 nodeGrid.UpdateNodeInGrid(position - new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition - Vector3Int.up);
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
@@ -476,16 +486,16 @@ public class WorldManager : MonoBehaviour
                         return;
                     }
 
-                    tilemaps[tileLayer].SetTile(tilePosition, allTiles[1]);
-                    tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[5]);
-                    tilemaps[tileLayer - 2].SetTile(tilePosition + new Vector3Int(0, -1, 0), allTiles[5]);
+                    tilemaps[tileLayer].SetTile(tilePosition, allTiles[(int)TileType.Cliff]);
+                    tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Waterfall]);
+                    tilemaps[tileLayer - 2].SetTile(tilePosition + new Vector3Int(0, -1, 0), allTiles[(int)TileType.Waterfall]);
 
                     nodeGrid.UpdateNodeInGrid(position - new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + new Vector3Int(0, -1, 0));
                 }
                 else
                 {
-                    tilemaps[tileLayer].SetTile(tilePosition, allTiles[1]);
-                    tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[2]);
+                    tilemaps[tileLayer].SetTile(tilePosition, allTiles[(int)TileType.Cliff]);
+                    tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Water]);
                 }
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
@@ -493,7 +503,7 @@ public class WorldManager : MonoBehaviour
                 break;
             case TileType.Water: //remove water
                 tilemaps[tileLayer + 1].SetTile(tilePosition, null);
-                tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
+                tilemaps[tileLayer].SetTile(tilePosition, allTiles[(int)TileType.Grass]);
 
                 nodeGrid.UpdateNodeInGrid(position, tilePosition);
 
@@ -506,8 +516,8 @@ public class WorldManager : MonoBehaviour
                     if (tile != null && tile.tileType == TileType.Waterfall)
                     {
                         tilemaps[tileLayer + 1].SetTile(tilePosition, null);
-                        tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
-                        tilemaps[tileLayer - 2].SetTile(tilePosition + Vector3Int.down, allTiles[1]);
+                        tilemaps[tileLayer].SetTile(tilePosition, allTiles[(int)TileType.Grass]);
+                        tilemaps[tileLayer - 2].SetTile(tilePosition + Vector3Int.down, allTiles[(int)TileType.Cliff]);
 
                         nodeGrid.UpdateNodeInGrid(position, tilePosition);
                     }
@@ -517,8 +527,8 @@ public class WorldManager : MonoBehaviour
                         if (tile != null && tile.tileType == TileType.Waterfall)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition, null);
-                            tilemaps[tileLayer].SetTile(tilePosition, allTiles[0]);
-                            tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[1]);
+                            tilemaps[tileLayer].SetTile(tilePosition, allTiles[(int)TileType.Grass]);
+                            tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[(int)TileType.Cliff]);
 
                             nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
                         }
@@ -529,8 +539,8 @@ public class WorldManager : MonoBehaviour
                     tile = tilemaps[tileLayer + 4].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Waterfall)
                     {
-                        tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[1]);
-                        tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[0]);
+                        tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Cliff]);
+                        tilemaps[tileLayer + 3].SetTile(tilePosition + Vector3Int.up, allTiles[(int)TileType.Grass]);
                         tilemaps[tileLayer + 4].SetTile(tilePosition + Vector3Int.up, null);
 
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
@@ -578,8 +588,8 @@ public class WorldManager : MonoBehaviour
                     tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.up);
                     if (tile != null && tile.tileType == TileType.Cliff)
                     {
-                        tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[4]);
-                        tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, allTiles[4]);
+                        tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Ramp]);
+                        tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, allTiles[(int)TileType.Ramp]);
 
                         nodeGrid.UpdateNodeInGrid(position, tilePosition);
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
@@ -591,7 +601,7 @@ public class WorldManager : MonoBehaviour
                     if (tile != null && tile.tileType == TileType.Ramp)
                     {
                         tilemaps[tileLayer + 1].SetTile(tilePosition, null);
-                        tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, allTiles[1]);
+                        tilemaps[tileLayer + 1].SetTile(tilePosition + Vector3Int.up, allTiles[(int)TileType.Cliff]);
 
                         nodeGrid.UpdateNodeInGrid(position, tilePosition);
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.up);
@@ -608,8 +618,8 @@ public class WorldManager : MonoBehaviour
                 tile = tilemaps[tileLayer - 3].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down);
                 if (tile != null && tile.tileType == TileType.Grass)
                 {
-                    tilemaps[tileLayer - 2].SetTile(tilePosition, allTiles[4]);
-                    tilemaps[tileLayer - 2].SetTile(tilePosition + Vector3Int.down, allTiles[4]);
+                    tilemaps[tileLayer - 2].SetTile(tilePosition, allTiles[(int)TileType.Ramp]);
+                    tilemaps[tileLayer - 2].SetTile(tilePosition + Vector3Int.down, allTiles[(int)TileType.Ramp]);
 
                     nodeGrid.UpdateNodeInGrid(position - new Vector3(0f, GetComponent<Grid>().cellSize.y, 0f), tilePosition + Vector3Int.down);
                     nodeGrid.UpdateNodeInGrid(position, tilePosition);
@@ -652,7 +662,7 @@ public class WorldManager : MonoBehaviour
         {
             for (int x = -1; x <= 1; x++)
             {
-                tilemaps[layer - 5].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[1]);
+                tilemaps[layer - 5].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[(int)TileType.Cliff]);
                 nodeGrid.UpdateNodeInGrid(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
             }
         }
@@ -758,7 +768,7 @@ public class WorldManager : MonoBehaviour
                         for (int x = 0; x < width; x++)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), null);
-                            tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), allTiles[0]);
+                            tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(x, direction.y * y, 0), allTiles[(int)TileType.Grass]);
                             nodeGrid.UpdateNodeInGrid(position + new Vector3(x, direction.y * cellSize.y * y, 0f), tilePosition + direction * y);
                         }
                     }
@@ -827,7 +837,7 @@ public class WorldManager : MonoBehaviour
                         for (int y = 0; y < length; y++)
                         {
                             tilemaps[tileLayer + 1].SetTile(tilePosition + new Vector3Int(direction.x * y, x, 0), null);
-                            tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(direction.x * y, x, 0), allTiles[0]);
+                            tilemaps[tileLayer].SetTile(tilePosition + new Vector3Int(direction.x * y, x, 0), allTiles[(int)TileType.Grass]);
                             nodeGrid.UpdateNodeInGrid(position + new Vector3(direction.x * cellSize.x * y, x, 0f), tilePosition + direction * y);
                         }
                     }

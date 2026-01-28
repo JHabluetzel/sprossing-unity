@@ -22,30 +22,13 @@ public class NodeGrid : MonoBehaviour
 
     private void Awake()
     {
-        tilemaps = new Tilemap[grid.transform.childCount];
-
-        for (int i = 0; i < grid.transform.childCount; i++)
-        {
-            tilemaps[i] = grid.transform.GetChild(i).GetComponent<Tilemap>();
-
-            if (tilemaps[i].cellBounds.size.x > gridSize.x)
-            {
-                gridSize.x = tilemaps[i].cellBounds.size.x;
-            }
-
-            if (tilemaps[i].cellBounds.size.y > gridSize.y)
-            {
-                gridSize.y = tilemaps[i].cellBounds.size.y;
-            }
-        }
-
-        bottomLeft = new Vector3(-gridSize.x / 2f * grid.cellSize.x + grid.cellSize.x, -gridSize.y / 2f * grid.cellSize.y, 0f);
+        tilemaps = grid.transform.GetComponentsInChildren<Tilemap>();
     }
 
-    public void GenerateGrid()
+    public void GenerateGrid(Vector2Int gridSize)
     {
-        Debug.Log(gridSize);
-        Debug.Log(bottomLeft);
+        this.gridSize = gridSize;
+        bottomLeft = new Vector3(-gridSize.x / 2f * grid.cellSize.x + grid.cellSize.x, -gridSize.y / 2f * grid.cellSize.y, 0f);
 
         nodes = new Node[gridSize.x, gridSize.y];
         string temp = "";

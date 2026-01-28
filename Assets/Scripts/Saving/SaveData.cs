@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using System.Numerics;
+using UnityEngine;
 
 public class SaveData
 {
+    public int[] gridSize;
+
     public List<SavedTile> layer0;
     public List<SavedTile> layer1;
     public List<SavedTile> layer2;
@@ -17,8 +21,12 @@ public class SaveData
     public float[] playerPosition;
     public int[] playerDirection;
 
-    public SaveData(PlayerController player)
+    public SaveData(Vector2Int gridSize, PlayerController player)
     {
+        this.gridSize = new int[2];
+        this.gridSize[0] = gridSize.x;
+        this.gridSize[1] = gridSize.y;
+
         playerPosition = new float[2];
         playerDirection = new int[3];
 
