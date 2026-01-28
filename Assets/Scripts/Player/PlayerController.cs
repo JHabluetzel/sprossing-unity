@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.InputSystem.InputAction;
 
 public class PlayerController : MovementController
 {
@@ -12,18 +13,25 @@ public class PlayerController : MovementController
 
     private void Update()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
-
-        input.x = Mathf.RoundToInt(moveX);
-        input.y = Mathf.RoundToInt(moveY);
-
-        isButtonDown = input.x != 0 || input.y != 0;
-
-        if (!isMoving && isButtonDown)
+         if (!isMoving && isButtonDown)
         {
             StopAllCoroutines();
             StartCoroutine(MovePlayer());
+        }
+    }
+
+    public void HandleInput(CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Vector2 newInput = context.ReadValue<Vector2>();
+            input = new Vector3Int(Mathf.RoundToInt(newInput.x), Mathf.RoundToInt(newInput.y));
+
+            isButtonDown = input.x != 0 || input.y != 0;
+        }
+        else if (context.canceled)
+        {
+            isButtonDown = false;
         }
     }
 

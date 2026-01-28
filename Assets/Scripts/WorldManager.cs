@@ -49,7 +49,7 @@ public class WorldManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.N))
+        /*if (Input.GetKeyUp(KeyCode.N))
         {
             Seasons newSeason = allTiles[(int)TileType.Grass].season;
 
@@ -78,7 +78,7 @@ public class WorldManager : MonoBehaviour
             {
                 map.RefreshAllTiles();
             }
-        }
+        }*/
     }
 
     public void SaveMap()
