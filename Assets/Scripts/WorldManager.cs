@@ -342,9 +342,8 @@ public class WorldManager : MonoBehaviour
                                 SeasonalRuleTile tileB = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, y, 0));
                                 if (tileB != null && (tileB.tileType == TileType.Water || tileB.tileType == TileType.Waterfall))
                                 {
-                                    
+                                    return;
                                 }
-                                return;
                             }
                         }
                     }
