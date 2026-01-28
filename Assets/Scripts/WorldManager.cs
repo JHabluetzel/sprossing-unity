@@ -25,9 +25,25 @@ public class WorldManager : MonoBehaviour
         }
         else
         {
+            Vector2Int gridSize = new Vector2Int(20, 19);
             //create world
             //set tiles
-            nodeGrid.GenerateGrid(new Vector2Int(20, 19));
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                for (int x = 0; x < gridSize.x; x++)
+                {
+                    if (y == 0)
+                    {
+                        tilemaps[0].SetTile(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0), allTiles[(int)TileType.Cliff]);
+                    }
+                    else
+                    {
+                        tilemaps[0].SetTile(new Vector3Int(x - gridSize.x / 2, y - gridSize.y / 2, 0), allTiles[(int)TileType.Grass]);
+                    }
+                }
+            }
+            
+            nodeGrid.GenerateGrid(gridSize);
         }
     }
 
@@ -187,7 +203,7 @@ public class WorldManager : MonoBehaviour
 
             for (int j = 0; j < savedTiles.Count; j++)
             {
-                tilemaps[i].SetTile(savedTiles[j].position, allTiles[(int) savedTiles[j].tileType]);
+                tilemaps[i].SetTile(savedTiles[j].position, allTiles[(int)savedTiles[j].tileType]);
             }
         }
 

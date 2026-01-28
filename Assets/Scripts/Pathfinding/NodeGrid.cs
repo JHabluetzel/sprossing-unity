@@ -111,7 +111,14 @@ public class NodeGrid : MonoBehaviour
                     }
                 }
 
-                temp += nodes[x, y].gridID + "|";
+                if (nodes[x, y] != null)
+                {
+                    temp += nodes[x, y].gridID + "|";
+                }
+                else
+                {
+                    temp += "X|";
+                }
             }
 
             temp += "\n";
