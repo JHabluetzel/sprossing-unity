@@ -8,8 +8,8 @@ public class MovementController : MonoBehaviour
     protected Vector3 targetPosition;
     public Vector3Int LastDirection { get; protected set; }
 
-    protected AnimationController animator;
-    protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected AnimationController animator;
+    [SerializeField] protected SpriteRenderer spriteRenderer;
     public int layer;
 
     private bool wasInit;
@@ -21,24 +21,18 @@ public class MovementController : MonoBehaviour
             return;
         }
 
-        animator = GetComponent<AnimationController>();
-
         LastDirection = new Vector3Int(0, -1, 0);
         animator.PlayIdleAnimation(GetDirection(LastDirection));
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
         layer = spriteRenderer.sortingOrder + 5;
     }
 
     //can run before Start() is called
     public void Initialize(int[] direction, int layer)
     {
-        animator = GetComponent<AnimationController>();
-
         LastDirection = new Vector3Int(direction[0], direction[1], 0);
         animator.PlayIdleAnimation(GetDirection(LastDirection));
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = layer - 5;
         
         this.layer = layer;

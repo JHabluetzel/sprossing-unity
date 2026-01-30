@@ -5,14 +5,8 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
-    private NodeGrid nodes;
-    private PathRequestManager requestManager;
-
-    private void Start()
-    {
-        nodes = GetComponent<NodeGrid>();
-        requestManager = GetComponent<PathRequestManager>();
-    }
+    [SerializeField] private NodeGrid nodes;
+    [SerializeField] private PathRequestManager requestManager;
 
     public void StartFindPath(Vector3 startPosition, int layer, Vector3 targetPosition)
     {

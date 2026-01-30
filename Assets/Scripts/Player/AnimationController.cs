@@ -2,13 +2,8 @@ using UnityEngine;
 
 public class AnimationController : MonoBehaviour
 {
-    private Animator animator;
+    [SerializeField] private Animator animator;
     private string currentAnimation;
-
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
 
     public void PlayIdleAnimation(string direction)
     {

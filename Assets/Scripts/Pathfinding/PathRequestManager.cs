@@ -8,13 +8,12 @@ public class PathRequestManager : MonoBehaviour
 
     private Queue<PathRequest> requestQueue = new Queue<PathRequest>();
     private PathRequest currRequest;
-    Pathfinding pathfinding;
+    [SerializeField] private Pathfinding pathfinding;
     private bool isProcessing;
 
     private void Start()
     {
         instance = this;
-        pathfinding = GetComponent<Pathfinding>();
     }
 
     struct PathRequest
