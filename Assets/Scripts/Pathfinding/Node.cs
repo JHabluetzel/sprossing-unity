@@ -65,7 +65,7 @@ public class Node : IHeapItem<Node>
         }
         else if (gridID - layer <= 6 && gridID - layer >= 5)
         {
-            return layer;
+            return 0; //return layer;
         }
         else if (direction.x == 0 && Math.Abs(layer - gridID) == 1) //ramp
         {
@@ -92,7 +92,7 @@ public class Node : IHeapItem<Node>
         }
         else if (gridID - layer <= 6 && gridID - layer >= 5)
         {
-            return true;
+            return false; //return layer;
         }
 
         return false;
