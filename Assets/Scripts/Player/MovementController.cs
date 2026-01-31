@@ -33,11 +33,22 @@ public class MovementController : MonoBehaviour
         LastDirection = new Vector3Int(direction[0], direction[1], 0);
         animator.PlayIdleAnimation(GetDirection(LastDirection));
 
-        spriteRenderer.sortingOrder = layer - 5;
-        
+        SetSortingOrder(layer);
         this.layer = layer;
 
         wasInit = true;
+    }
+
+    protected virtual void SetSortingOrder(int layer)
+    {
+        if ((layer - 1) % 3 != 0) //ramp
+        {
+            spriteRenderer.sortingOrder = layer;
+        }
+        else
+        {
+            spriteRenderer.sortingOrder = layer - 5;
+        }
     }
 
     protected string GetDirection(Vector3Int direction)

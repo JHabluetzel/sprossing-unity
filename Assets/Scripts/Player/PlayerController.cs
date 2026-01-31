@@ -11,12 +11,20 @@ public class PlayerController : MovementController
     private bool isButtonDown;
     private Vector3Int input;
 
+    [SerializeField] private SpriteRenderer bubble;
+
+    protected override void SetSortingOrder(int layer)
+    {
+        base.SetSortingOrder(layer);
+        bubble.sortingOrder = spriteRenderer.sortingOrder + 3;
+    }
+
     private void Update()
     {
-         if (!isMoving && isButtonDown)
+        if (!isMoving && isButtonDown)
         {
-            StopAllCoroutines();
-            StartCoroutine(MovePlayer());
+            StopCoroutine("MovePlayer");
+            StartCoroutine("MovePlayer");
         }
     }
 
@@ -99,14 +107,7 @@ public class PlayerController : MovementController
                                 transform.position = targetPosition;
                                 layer = targetLayer;
 
-                                if ((layer - 1) % 3 != 0) //ramp
-                                {
-                                    spriteRenderer.sortingOrder = layer;
-                                }
-                                else
-                                {
-                                    spriteRenderer.sortingOrder = layer - 5;
-                                }
+                                SetSortingOrder(layer);
                             }
                         }
                     }
@@ -122,14 +123,7 @@ public class PlayerController : MovementController
                         transform.position = targetPosition;
                         layer = targetLayer;
 
-                        if ((layer - 1) % 3 != 0) //ramp
-                        {
-                            spriteRenderer.sortingOrder = layer;
-                        }
-                        else
-                        {
-                            spriteRenderer.sortingOrder = layer - 5;
-                        }
+                        SetSortingOrder(layer);
                     }
                 }
 
@@ -146,83 +140,160 @@ public class PlayerController : MovementController
         isMoving = false;
     }
 
+    private void EnableBubble()
+    {
+        StopCoroutine("HideBubble");
+        bubble.gameObject.SetActive(true);
+        StartCoroutine("HideBubble");
+    }
+
+    IEnumerator HideBubble()
+    {
+        yield return new WaitForSeconds(0.5f);
+        bubble.gameObject.SetActive(false);
+    }
+
     public void Pathing()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.Pathing(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.Pathing(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void Terraform()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.Terraform(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.Terraform(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void Waterscape()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.Waterscape(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.Waterscape(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void PlaceRamp()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0) //not facing right direction
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.PlaceRamp(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.PlaceRamp(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void PlaceHouse()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 || LastDirection.y != 1) //not facing up
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.PlaceHouse(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.PlaceHouse(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void PlaceBridge(int width)
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.PlaceBridge(transform.position, layer, LastDirection, width);
         }
 
-        worldManager.PlaceBridge(transform.position, layer, LastDirection, width);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void PlaceFence()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.PlaceFence(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.PlaceFence(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 
     public void PlaceTree()
     {
+        bool wasSuccess;
         if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
         {
-            return;
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.PlaceTree(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
-        worldManager.PlaceTree(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
     }
 }
