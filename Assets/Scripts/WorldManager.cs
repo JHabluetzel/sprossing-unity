@@ -980,7 +980,18 @@ public class WorldManager : MonoBehaviour
             tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, 0, 0));
             if (tile != null && tile.tileType != TileType.Path)
             {
-                return false;
+                if (x == 0 || (tile.tileType != TileType.Water && tile.tileType != TileType.Waterfall))
+                {
+                    return false;
+                }
+                /*if (x == 0 && tile.tileType == TileType.Water && tile.tileType == TileType.Waterfall)
+                {
+                    return false;
+                }
+                else if (tile.tileType == TileType.Cliff)
+                {
+                    
+                }*/
             }
         }
 
