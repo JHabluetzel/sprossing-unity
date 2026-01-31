@@ -74,6 +74,12 @@ public class WorldManager : MonoBehaviour
         {
             map.RefreshAllTiles();
         }
+
+        foreach (Transform child in objectParent)
+        {
+            Structure structure = child.GetComponent<Structure>();
+            structure.ChangeSeason((int)newSeason);
+        }
     }
 
     public void SaveMap()

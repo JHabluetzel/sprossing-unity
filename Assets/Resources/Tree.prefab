@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4730342809906953387}
   - component: {fileID: 6160919680510209718}
+  - component: {fileID: 159635892251519986}
+  - component: {fileID: 7823686988773653300}
   m_Layer: 0
   m_Name: CanopyLower
   m_TagString: Untagged
@@ -84,6 +86,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &159635892251519986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494868982926820738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library: []
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 5da476f3f0eaf4ac19c18d1beebd05ff, type: 3}
+--- !u!114 &7823686988773653300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494868982926820738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CategoryHash: 1.0813741e-29
+  m_labelHash: 0.0010235785
+  m_SpriteKey: 0
+  m_SpriteHash: 200589565
 --- !u!1 &5050753054600748904
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,6 +217,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: {x: 0, y: 0}
   bottomLeft: {x: 0, y: 0}
+  libraryAssets:
+  - {fileID: 7108339969198208228, guid: 5da476f3f0eaf4ac19c18d1beebd05ff, type: 3}
+  - {fileID: 7108339969198208228, guid: ce2c09c0b46bb45018786655133fbea8, type: 3}
+  - {fileID: 7108339969198208228, guid: 61650556325b847fa8749f92e65825aa, type: 3}
+  - {fileID: 7108339969198208228, guid: 9773af78b47b14c99b773f71adfcd719, type: 3}
 --- !u!1 &5166411182759039108
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +232,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1589517616969325517}
   - component: {fileID: 788412709785108868}
+  - component: {fileID: 1159099457514261334}
+  - component: {fileID: 3283692368113967654}
   m_Layer: 0
   m_Name: CanopyUpper
   m_TagString: Untagged
@@ -269,3 +308,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &1159099457514261334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5166411182759039108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library: []
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 5da476f3f0eaf4ac19c18d1beebd05ff, type: 3}
+--- !u!114 &3283692368113967654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5166411182759039108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CategoryHash: 2.8910985e-10
+  m_labelHash: 0.0000000037045578
+  m_SpriteKey: 0
+  m_SpriteHash: 893606092
