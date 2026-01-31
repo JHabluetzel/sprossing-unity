@@ -215,4 +215,14 @@ public class PlayerController : MovementController
 
         worldManager.PlaceFence(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
     }
+
+    public void PlaceTree()
+    {
+        if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
+        {
+            return;
+        }
+
+        worldManager.PlaceTree(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+    }
 }

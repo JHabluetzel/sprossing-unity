@@ -702,6 +702,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: overlay_0
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 96
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac51f6dbcc5a84d6086942d5b6766a4e
+      internalID: 1387890773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -721,6 +742,7 @@ TextureImporter:
       bridge_4: 1479695878
       bridge_6: -892399516
       bridge_7: -197488705
+      overlay_0: 1387890773
       path_0: 39578980
       path_1: -27285152
       path_10: 562040929

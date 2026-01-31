@@ -513,6 +513,195 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: structures_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 24
+        width: 15
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 990f4849680b84817bae30c31a868b6c
+      internalID: -1692282063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_19
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 21
+        width: 31
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf7a4dcfb3fa241449c333ca2ffe1307
+      internalID: -1958828959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_20
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 21
+        width: 31
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee64d87cffbfb492b8c726b4a4491d26
+      internalID: -590753524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_21
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 21
+        width: 31
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c21ac27c0daf4ef59e239abd257d445
+      internalID: -1277664508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_22
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 21
+        width: 31
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d92cd421f07b04c9e8b23b5f8e21a1c1
+      internalID: -970127784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_23
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 48
+        width: 31
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a72b10d732f64c05b403d3a638442ad
+      internalID: 874690777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_24
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 48
+        width: 31
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf216a53b9ca44d659b0cae2a6387536
+      internalID: -1746517465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_25
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 48
+        width: 31
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20268e4fcf3ef420baaa571a83694681
+      internalID: -1593716231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: structures_26
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 48
+        width: 31
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbde79a62e251499e91f784fea717075
+      internalID: 1677004291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -534,7 +723,16 @@ TextureImporter:
       structures_15: 2058591982
       structures_16: 282690226
       structures_17: 726072404
+      structures_18: -1692282063
+      structures_19: -1958828959
       structures_2: -1845749928
+      structures_20: -590753524
+      structures_21: -1277664508
+      structures_22: -970127784
+      structures_23: 874690777
+      structures_24: -1746517465
+      structures_25: -1593716231
+      structures_26: 1677004291
       structures_3: 557446355
       structures_4: -1574722500
       structures_5: 1939694218

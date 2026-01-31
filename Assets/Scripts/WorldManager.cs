@@ -206,7 +206,7 @@ public class WorldManager : MonoBehaviour
         {
             Structure newHouse = Resources.Load<Structure>($"{child.prefabName}");
             newHouse = Instantiate(newHouse, new Vector3(child.position[0], child.position[1], 0f), Quaternion.identity, objectParent);
-            newHouse.GetComponent<SpriteRenderer>().sortingOrder = child.layer;
+            newHouse.SetLayer(child.layer);
         }
 
         nodeGrid.GenerateGrid(new Vector2Int(saveData.gridSize[0], saveData.gridSize[1]));
@@ -232,6 +232,11 @@ public class WorldManager : MonoBehaviour
                         nodeGrid.UpdateNodeInGrid(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
                     }
                 }
+            }
+            else
+            {
+                tilemaps[layer].SetTile(tilePosition, null);
+                nodeGrid.UpdateNodeInGrid(position, tilePosition);
             }
 
             Destroy(structure.gameObject);
@@ -689,13 +694,13 @@ public class WorldManager : MonoBehaviour
 
         Structure house = Resources.Load<Structure>("House");
         house = Instantiate(house, position, Quaternion.identity, objectParent);
-        house.GetComponent<SpriteRenderer>().sortingOrder = layer - 5;
+        house.SetLayer(layer - 5);
 
         for (int y = 0; y <= 1; y++)
         {
             for (int x = -1; x <= 1; x++)
             {
-                tilemaps[layer - 5].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[(int)TileType.Cliff]);
+                tilemaps[layer - 5].SetTile(tilePosition + new Vector3Int(x, y, 0), allTiles[(int)TileType.Block]);
                 nodeGrid.UpdateNodeInGrid(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), tilePosition + new Vector3Int(x, y, 0));
             }
         }
@@ -906,6 +911,47 @@ public class WorldManager : MonoBehaviour
             tilemaps[tileLayer + 2].SetTile(tilePosition, allTiles[(int)TileType.Fence]);
             nodeGrid.UpdateNodeInGrid(position, tilePosition);
         }
+    }
+
+    public void PlaceTree(Vector3 position, int layer)
+    {
+        if ((layer - 1) % 3 != 0) //on ramp
+        {
+            return;
+        }
+
+        int tileLayer = layer - 7;
+
+        Vector3Int tilePosition = tilemaps[0].WorldToCell(position);
+
+        for (int x = -1; x <= 1; x++)
+        {
+            SeasonalRuleTile tile = tilemaps[tileLayer + 2].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, 0, 0));
+            if (tile != null)
+            {
+                if (x == 0)
+                {
+                    return;
+                }
+                else if (tile.tileType == TileType.Block)
+                {
+                    return;
+                }
+            }
+
+            tile = tilemaps[tileLayer + 1].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(x, 0, 0));
+            if (tile != null && tile.tileType != TileType.Path)
+            {
+                return;
+            }
+        }
+
+        Structure tree = Resources.Load<Structure>("Tree");
+        tree = Instantiate(tree, position, Quaternion.identity, objectParent);
+        tree.SetLayer(layer - 5);
+
+        tilemaps[tileLayer + 2].SetTile(tilePosition, allTiles[(int)TileType.Block]);
+        nodeGrid.UpdateNodeInGrid(position, tilePosition);
     }
 
     public Vector3 GetRandomPoint(Vector3 currPosition, float radius)
