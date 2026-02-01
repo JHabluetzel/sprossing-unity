@@ -25,7 +25,7 @@ public class WorldManager : MonoBehaviour
         }
         else
         {
-            Vector2Int gridSize = new Vector2Int(20, 18);
+            Vector2Int gridSize = new Vector2Int(80, 64);
             //create world
             //set tiles
             for (int y = 0; y < gridSize.y; y++)

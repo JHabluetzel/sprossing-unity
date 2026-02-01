@@ -10,12 +10,22 @@ public class NPCController : MovementController
     private Node[] path;
     private bool isBusy;
 
+    [SerializeField] private Transform target;
+
     private void Update()
     {
         if (!isBusy)
         {
             isBusy = true;
-            PathRequestManager.RequestPath(transform.position, layer, worldManager.GetRandomPoint(transform.position, radius), OnPathFound);
+
+            if (target == null)
+            {
+                PathRequestManager.RequestPath(transform.position, layer, worldManager.GetRandomPoint(transform.position, radius), OnPathFound);
+            }
+            else
+            {
+                PathRequestManager.RequestPath(transform.position, layer, target.position, OnPathFound);
+            }
         }
     }
 

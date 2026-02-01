@@ -52,7 +52,7 @@ public class Node : IHeapItem<Node>
         return -compare;
     }
 
-    public int GetLevel(int layer, Vector3Int direction) //player movement
+    public int GetLevel(int layer, Vector3Int direction)
     {
         if (gridID <= 0)
         {
@@ -71,30 +71,14 @@ public class Node : IHeapItem<Node>
         {
             return gridID;
         }
-        else if (direction.x == 0 && gridID % (layer + 1) == 0) //ramp
+        else if (direction.x == 0 && gridID % (layer + 1) == 0) //leave ramp
         {
-            return layer + 1;
+            if ((layer - 1) % 3 != 0) //on ramp
+            {
+                return layer + 1;
+            }
         }
 
         return 0;
-    }
-
-    public bool IsWalkable(int layer) //NPC movement
-    {
-        if (gridID <= 0)
-        {
-            return false;
-        }
-
-        if (layer == gridID || gridID % layer == 0)
-        {
-            return true;
-        }
-        else if (gridID - layer <= 6 && gridID - layer >= 5)
-        {
-            return false; //return layer;
-        }
-
-        return false;
     }
 }
