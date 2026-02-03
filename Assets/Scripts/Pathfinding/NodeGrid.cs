@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -31,7 +32,7 @@ public class NodeGrid : MonoBehaviour
         bottomLeft = new Vector3(-gridSize.x / 2f * grid.cellSize.x + grid.cellSize.x, -gridSize.y / 2f * grid.cellSize.y, 0f);
 
         nodes = new Node[gridSize.x, gridSize.y];
-        string temp = "";
+        StringBuilder temp = new StringBuilder();
 
         for (int y = 0; y < gridSize.y; y++)
         {
@@ -113,15 +114,15 @@ public class NodeGrid : MonoBehaviour
 
                 if (nodes[x, y] != null)
                 {
-                    temp += nodes[x, y].gridID + "|";
+                    temp.Append(nodes[x, y].gridID + "|");
                 }
                 else
                 {
-                    temp += "X|";
+                    temp.Append("X|");
                 }
             }
 
-            temp += "\n";
+            temp.Append("\n");
         }
 
         Debug.Log(temp);
