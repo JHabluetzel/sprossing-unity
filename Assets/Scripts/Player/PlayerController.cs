@@ -154,8 +154,6 @@ public class PlayerController : MovementController
             bool clockwise = Mathf.Sign(LastDirection.x * currInput.y - LastDirection.y * currInput.x) <= 0;
             int nrOfTurns = Mathf.RoundToInt(Vector3.Angle(currInput, LastDirection) / 45f);
 
-            Debug.Log(nrOfTurns);
-
             if (!canTurn)
             {
                 if (nrOfTurns != 4)

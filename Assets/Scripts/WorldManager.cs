@@ -483,7 +483,7 @@ public class WorldManager : MonoBehaviour
 
             if (tile == null)
             {
-                tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition);
+                tile = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down);
             }
 
             if (tile != null && (tile.tileType == TileType.Grass || tile.tileType == TileType.Ramp))
