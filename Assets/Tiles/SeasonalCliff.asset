@@ -321,9 +321,9 @@ MonoBehaviour:
   - m_Id: 0
     m_Sprites:
     - {fileID: 696502965, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
-    - {fileID: 320382920, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
-    - {fileID: -1389882333, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
-    - {fileID: 2143604588, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -2098981271, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1966435477, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1839323509, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -339,9 +339,9 @@ MonoBehaviour:
   - m_Id: 18
     m_Sprites:
     - {fileID: 696502965, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
-    - {fileID: 320382920, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
-    - {fileID: -1389882333, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
-    - {fileID: 2143604588, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -2098981271, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1966435477, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
+    - {fileID: -1839323509, guid: 806b33186d5b04c4488a55b58db2e9ed, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -411,7 +411,7 @@ MonoBehaviour:
     m_NeighborPositions: []
     m_RuleTransform: 0
   tileType: 1
-  season: 0
+  season: 3
   tilesToConnect:
   - {fileID: 11400000, guid: 353bafe16f90e4663933d9bc4c84414b, type: 2}
   - {fileID: 11400000, guid: 80f63757680f744b7876df937bc0b17e, type: 2}

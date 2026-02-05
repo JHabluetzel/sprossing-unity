@@ -773,8 +773,10 @@ public class WorldManager : MonoBehaviour
             for (int x = -1; x <= 1; x++)
             {
                 Node checkNode = nodeGrid.GetNodeFromWorldPosition(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f));
-                if (checkNode == null || checkNode.gridID != layer)
+                if (checkNode == null || (checkNode.gridID != layer && checkNode.gridID % layer != 0))
                 {
+                    Debug.Log(checkNode == null);
+                    Debug.Log(checkNode.gridID != layer);
                     return false;
                 }
             }

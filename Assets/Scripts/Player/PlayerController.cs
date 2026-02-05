@@ -110,6 +110,34 @@ public class PlayerController : MovementController
                 }
 
                 break;
+            case "Fencing":
+                if (isButtonDown)
+                {
+                    if (!isBusy && lastAction != "Fencing")
+                    {
+                        lastAction = "Fencing";
+                        PlaceFence();
+                    }
+                    else if (!isBusy)
+                    {
+                        lastAction = "Moving";
+                        StartCoroutine(MovePlayer(false));
+                    }
+                }
+                else
+                {
+                    if (!isBusy && lastAction != "Fencing")
+                    {
+                        lastAction = "Fencing";
+                        PlaceFence();
+                    }
+                    else if (!isBusy)
+                    {
+                        animator.PlayIdleAnimation(GetDirection(LastDirection));
+                    }
+                }
+
+                break;
             default:
                 if (!isBusy && isButtonDown)
                 {
@@ -338,6 +366,28 @@ public class PlayerController : MovementController
         }
     }
 
+    public void PlaceFence()
+    {
+        isBusy = true;
+        
+        bool wasSuccess;
+        if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
+        {
+            wasSuccess = false;
+        }
+        else
+        {
+            wasSuccess = worldManager.PlaceFence(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
+        }
+
+        isBusy = false;
+
+        if (!wasSuccess)
+        {
+            EnableBubble();
+        }
+    }
+
     public void ChangeState(string state)
     {
         this.state = state;
@@ -402,28 +452,6 @@ public class PlayerController : MovementController
         else
         {
             wasSuccess = worldManager.PlaceBridge(transform.position, layer, LastDirection, width);
-        }
-
-        if (!wasSuccess)
-        {
-            EnableBubble();
-        }
-    }
-
-    public void PlaceFence()
-    {
-        bool wasSuccess;
-        if (LastDirection.x != 0 && LastDirection.y != 0) //can't be on diagonal
-        {
-            wasSuccess = false;
-        }
-        else if (isBusy)
-        {
-            wasSuccess = false;
-        }
-        else
-        {
-            wasSuccess = worldManager.PlaceFence(transform.position + new Vector3(LastDirection.x * grid.cellSize.x, LastDirection.y * grid.cellSize.y, 0), layer);
         }
 
         if (!wasSuccess)
