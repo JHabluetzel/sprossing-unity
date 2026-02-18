@@ -14,12 +14,14 @@ public class WorldManager : MonoBehaviour
     private Tilemap[] tilemaps;
     private Vector3 cellSize;
 
+    private static Vector3CoordComparer customComparer = new Vector3CoordComparer();
+
     private void Start()
     {
         tilemaps = transform.GetComponentsInChildren<Tilemap>();
         cellSize = GetComponent<Grid>().cellSize;
 
-        structures = new Dictionary<Vector3, Structure>();
+        structures = new Dictionary<Vector3, Structure>(customComparer);
 
         if (GlobalManager.singleton.saveData != null)
         {
@@ -554,7 +556,7 @@ public class WorldManager : MonoBehaviour
 
                 if (invalidNeighbor)
                 {
-                    SeasonalRuleTile tileA = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(0, -1, 0));
+                    SeasonalRuleTile tileA = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down);
                     if (tileA != null)
                     {
                         return false;
@@ -564,14 +566,14 @@ public class WorldManager : MonoBehaviour
 
                     if (tileLayer > 2)
                     {
-                        tileB = tilemaps[tileLayer - 2].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(0, -1, 0));
+                        tileB = tilemaps[tileLayer - 2].GetTile<SeasonalRuleTile>(tilePosition + Vector3Int.down);
                         if (tileB == null || tileB.tileType != TileType.Cliff)
                         {
                             return false;
                         }
                     }
 
-                    tileA = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(0, -2, 0));
+                    tileA = tilemaps[tileLayer].GetTile<SeasonalRuleTile>(tilePosition - new Vector3Int(0, 2, 0));
                     if (tileA != null)
                     {
                         return false;
@@ -579,8 +581,21 @@ public class WorldManager : MonoBehaviour
 
                     if (tileLayer > 3)
                     {
-                        tileB = tilemaps[tileLayer - 3].GetTile<SeasonalRuleTile>(tilePosition + new Vector3Int(0, -2, 0));
-                        if (tileB == null || tileB.tileType != TileType.Grass)
+                        tileB = tilemaps[tileLayer - 3].GetTile<SeasonalRuleTile>(tilePosition - new Vector3Int(0, 2, 0));
+                        if (tileB == null)
+                        {
+                            return false;
+                            //need to implement tall waterfalls
+                            /*tileB = tilemaps[tileLayer - 4].GetTile<SeasonalRuleTile>(tilePosition - new Vector3Int(0, 2, 0));
+                            if (tileB == null || tileB.tileType != TileType.FullCliff)
+                            {
+                                return false;
+                            }
+
+                            tilemaps[tileLayer - 4].SetTile(tilePosition - new Vector3Int(0, 2, 0), null);
+                            tilemaps[tileLayer - 2].SetTile(tilePosition - new Vector3Int(0, 2, 0), allTiles[(int)TileType.Waterfall]);*/
+                        }
+                        else if (tileB.tileType != TileType.Grass)
                         {
                             return false;
                         }
@@ -588,9 +603,9 @@ public class WorldManager : MonoBehaviour
 
                     tilemaps[tileLayer].SetTile(tilePosition, allTiles[(int)TileType.Cliff]);
                     tilemaps[tileLayer + 1].SetTile(tilePosition, allTiles[(int)TileType.Waterfall]);
-                    tilemaps[tileLayer - 2].SetTile(tilePosition + new Vector3Int(0, -1, 0), allTiles[(int)TileType.Waterfall]);
+                    tilemaps[tileLayer - 2].SetTile(tilePosition + Vector3Int.down, allTiles[(int)TileType.Waterfall]);
 
-                    nodeGrid.UpdateNodeInGrid(position - new Vector3(0f, cellSize.y, 0f), tilePosition + new Vector3Int(0, -1, 0));
+                    nodeGrid.UpdateNodeInGrid(position - new Vector3(0f, cellSize.y, 0f), tilePosition + Vector3Int.down);
                 }
                 else
                 {
