@@ -1,15 +1,14 @@
-using System;
 using UnityEngine;
 
 public class Node : IHeapItem<Node>
 {
     public Vector3 worldPosition;
     public int gridX, gridY;
-    public int gridID;
+    public int walkID; //2 = walkable, 1 = ramp, 0 = unwalkable
     public int movementPenalty;
     public Node parent;
     private int heapIndex;
-    public int layer;
+    public int layer { get; private set; }
 
     public int gCost;
     public int hCost;
@@ -22,11 +21,12 @@ public class Node : IHeapItem<Node>
         }
     }
 
-    public Node(Vector3 worldPosition, int gridX, int gridY)
+    public Node(Vector3 worldPosition, int gridX, int gridY, int layer)
     {
         this.worldPosition = worldPosition;
         this.gridX = gridX;
         this.gridY = gridY;
+        this.layer = layer;
     }
 
     public int HeapIndex
@@ -52,31 +52,33 @@ public class Node : IHeapItem<Node>
         return -compare;
     }
 
-    public int GetLevel(int layer, Vector3Int direction)
+    public int GetLevel(int checkLayer, Vector3Int direction)
     {
-        if (gridID <= 0)
-        {
-            return gridID;
-        }
+        int testLayer = checkLayer - 7;
+        testLayer = testLayer / 3;
 
-        if (layer == gridID || gridID % layer == 0)
+        if (walkID == 0)
         {
-            return layer;
+            return 0;
         }
-        else if (gridID - layer <= 6 && gridID - layer >= 5)
+        else if (direction.x == 0 && (checkLayer - 1) % 3 != 0) //on ramp
         {
-            return 0; //return layer;
-        }
-        else if (direction.x == 0 && Math.Abs(layer - gridID) == 1) //ramp
-        {
-            return gridID;
-        }
-        else if (direction.x == 0 && gridID % (layer + 1) == 0) //leave ramp
-        {
-            if ((layer - 1) % 3 != 0) //on ramp
+            if (walkID == 1)
             {
-                return layer + 1;
+                return checkLayer + direction.y;
             }
+            else
+            {
+                return layer * 3 + 7;
+            }
+        }
+        else if (direction.x == 0 && walkID == 1) //go on ramp
+        {
+            return checkLayer + direction.y;
+        }
+        else if (testLayer == layer && walkID != 1)
+        {
+            return checkLayer;
         }
 
         return 0;

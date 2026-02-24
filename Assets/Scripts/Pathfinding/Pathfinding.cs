@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
@@ -19,17 +18,14 @@ public class Pathfinding : MonoBehaviour
         Node[] waypoints = new Node[0];
         bool pathWasFound = false;
 
-        Node startNode = nodes.GetNodeFromWorldPosition(startPosition);
-        Node targetNode = nodes.GetNodeFromWorldPosition(targetPosition);
+        Node startNode = nodes.GetNodeFromWorldPosition(startPosition, Mathf.RoundToInt(startPosition.z));
+        Node targetNode = nodes.GetNodeFromWorldPosition(targetPosition, Mathf.RoundToInt(targetPosition.z));
 
-        if (startPosition == targetPosition || startNode == null || targetNode == null)
+        if (startPosition == targetPosition || startNode == null || targetNode == null || targetNode.walkID == 0)
         {
             requestManager.FinishedProcessingPath(waypoints, pathWasFound);
             yield break;
         }
-
-        startNode.layer = Mathf.RoundToInt(startPosition.z);
-        targetNode.layer = Mathf.RoundToInt(targetPosition.z);
 
         Heap<Node> openSet = new Heap<Node>(nodes.MaxSize);
         HashSet<Node> closedSet = new HashSet<Node>();
@@ -41,37 +37,36 @@ public class Pathfinding : MonoBehaviour
             Node currentNode = openSet.RemoveFirst();
             closedSet.Add(currentNode);
 
-            if (currentNode == targetNode) //found path  && currentNode.layer == targetPosition.z
+            if (currentNode.Equals(targetNode))
             {
                 pathWasFound = true;
                 break;
             }
 
-            foreach (Node neighbor in nodes.GetNeighbors(currentNode))
+            foreach (Node neighbour in nodes.GetNeighbors(currentNode))
             {
-                int newLayer = neighbor.GetLevel(currentNode.layer, new Vector3Int(neighbor.gridX - currentNode.gridX, neighbor.gridY - currentNode.gridY, 0));
-                if (newLayer <= 0 || closedSet.Contains(neighbor))
+                if (neighbour.walkID == 0 || closedSet.Contains(neighbour))
                 {
                     continue;
                 }
 
-                neighbor.layer = newLayer;
-                int newCost = currentNode.gCost + GetDistance(currentNode, neighbor) + neighbor.movementPenalty;
+                int newCost = currentNode.gCost + GetDistance(currentNode, neighbour) + neighbour.movementPenalty;
 
-                if (newCost < neighbor.gCost || !openSet.Contains(neighbor))
+                if (newCost < neighbour.gCost)
                 {
-                    neighbor.gCost = newCost;
-                    neighbor.hCost = GetDistance(neighbor, targetNode);
-                    neighbor.parent = currentNode;
+                    neighbour.gCost = newCost;
+                    neighbour.hCost = GetDistance(neighbour, targetNode);
+                    neighbour.parent = currentNode;
 
-                    if (!openSet.Contains(neighbor))
-                    {
-                        openSet.Add(neighbor);
-                    }
-                    else
-                    {
-                        openSet.UpdateItem(neighbor);
-                    }
+                    openSet.UpdateItem(neighbour);
+                }
+                else if (!openSet.Contains(neighbour))
+                {
+                    neighbour.gCost = newCost;
+                    neighbour.hCost = GetDistance(neighbour, targetNode);
+                    neighbour.parent = currentNode;
+
+                    openSet.Add(neighbour);
                 }
             }
         }
@@ -95,11 +90,11 @@ public class Pathfinding : MonoBehaviour
 
         if (deltaX > deltaY)
         {
-            return 14 * deltaY + 10 * (deltaX -  deltaY) + 5 * deltaZ;
+            return 14 * deltaY + 10 * (deltaX -  deltaY) + 20 * deltaZ;
         }
         else
         {
-            return 14 * deltaX + 10 * (deltaY -  deltaX) + 5 * deltaZ;
+            return 14 * deltaX + 10 * (deltaY -  deltaX) + 20 * deltaZ;
         }
     }
 
@@ -108,7 +103,7 @@ public class Pathfinding : MonoBehaviour
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
 
-        while (currentNode != startNode)
+        while (!currentNode.Equals(startNode))
         {
             path.Add(currentNode);
             currentNode = currentNode.parent;

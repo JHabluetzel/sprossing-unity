@@ -293,9 +293,29 @@ public class WorldManager : MonoBehaviour
 
     public int GetPositionLevel(Vector3 position, int layer, Vector3Int direction)
     {
-        Node targetNode = nodeGrid.GetNodeFromWorldPosition(position);
+        int checkLayer = layer - 7;
+        checkLayer = checkLayer / 3;
+
+        if (direction.y == 1 && layer % 3 == 0) //leaving ramp going up
+        {
+            checkLayer++;
+        }
+
+        Node targetNode = nodeGrid.GetNodeFromWorldPosition(position, checkLayer);
+
         if (targetNode == null)
         {
+            if (direction.y == -1 && (layer - 4) % 3 == 0) //stepping on ramp going down
+            {
+                checkLayer--;
+                targetNode = nodeGrid.GetNodeFromWorldPosition(position, checkLayer);
+
+                if (targetNode != null)
+                {
+                    return targetNode.GetLevel(layer, direction);
+                }
+            }
+            
             return 0;
         }
 
@@ -781,12 +801,15 @@ public class WorldManager : MonoBehaviour
             return false;
         }
 
+        int checkLayer = layer - 7;
+        checkLayer = checkLayer / 3;
+
         for (int y = 0; y <= 1; y++)
         {
             for (int x = -1; x <= 1; x++)
             {
-                Node checkNode = nodeGrid.GetNodeFromWorldPosition(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f));
-                if (checkNode == null || (checkNode.gridID != layer && checkNode.gridID % layer != 0))
+                Node checkNode = nodeGrid.GetNodeFromWorldPosition(position + new Vector3(cellSize.x * x, cellSize.y * y, 0f), checkLayer);
+                if (checkNode == null)
                 {
                     return false;
                 }
@@ -1167,17 +1190,49 @@ public class WorldManager : MonoBehaviour
         return true;
     }
 
-    public Vector3 GetRandomPoint(Vector3 currPosition, float radius)
+    public Vector3 GetRandomPoint(Vector3 currPosition, int layer, float radius)
     {
+        int checkLayer = layer - 7;
+        checkLayer = checkLayer / 3;
+
         Vector2 randomPos = Random.insideUnitCircle * radius + new Vector2(currPosition.x, currPosition.y);
-        Node randomNode = nodeGrid.GetNodeFromWorldPosition(new Vector3(randomPos.x, randomPos.y, 0f));
+        Node randomNode = nodeGrid.GetNodeFromWorldPosition(new Vector3(randomPos.x, randomPos.y, 0f), checkLayer);
 
         if (randomNode == null)
         {
+            if (checkLayer < 2)
+            {
+                checkLayer++;
+                randomNode = nodeGrid.GetNodeFromWorldPosition(new Vector3(randomPos.x, randomPos.y, 0f), checkLayer);
+
+                if (randomNode == null && checkLayer == 2)
+                {
+                    randomNode = nodeGrid.GetNodeFromWorldPosition(new Vector3(randomPos.x, randomPos.y, 0f), 0);
+                    if (randomNode != null)
+                    {
+                        return new Vector3(randomNode.worldPosition.x, randomNode.worldPosition.y, randomNode.layer);
+                    }
+                }
+            }
+            else
+            {
+                checkLayer--;
+                randomNode = nodeGrid.GetNodeFromWorldPosition(new Vector3(randomPos.x, randomPos.y, 0f), checkLayer);
+
+                if (randomNode == null && checkLayer == 0)
+                {
+                    randomNode = nodeGrid.GetNodeFromWorldPosition(new Vector3(randomPos.x, randomPos.y, 0f), 2);
+                    if (randomNode != null)
+                    {
+                        return new Vector3(randomNode.worldPosition.x, randomNode.worldPosition.y, randomNode.layer);
+                    }
+                }
+            }
+
             return currPosition;
         }
 
-        return new Vector3(randomNode.worldPosition.x, randomNode.worldPosition.y, currPosition.z);
+        return new Vector3(randomNode.worldPosition.x, randomNode.worldPosition.y, randomNode.layer);
     }
 
     public void ReturnToMenu()

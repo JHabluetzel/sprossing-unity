@@ -9,26 +9,23 @@ public class NPCController : MovementController
     [SerializeField] private float radius = 7.5f;
     private Node[] path;
 
-    [SerializeField] private Transform target;
+    [SerializeField] private MovementController target;
 
     private void Update()
     {
         if (!isBusy)
         {
             isBusy = true;
-            Vector3 currPos = new Vector3(transform.position.x, transform.position.y, layer);
+            Vector3 currPos = new Vector3(transform.position.x, transform.position.y, (layer - 7) / 3);
 
             if (target == null)
             {
-                PathRequestManager.RequestPath(currPos, worldManager.GetRandomPoint(currPos, radius), OnPathFound);
+                PathRequestManager.RequestPath(currPos, worldManager.GetRandomPoint(currPos, layer, radius), OnPathFound);
             }
             else
             {
-                Vector3 targetPos = new Vector3(target.position.x, target.position.y, layer);
-                if (target.TryGetComponent<SpriteRenderer>(out SpriteRenderer spriteRenderer))
-                {
-                    targetPos.z = spriteRenderer.sortingOrder + 5;
-                }
+                Vector3 targetPos = new Vector3(target.transform.position.x, target.transform.position.y, layer);
+                targetPos.z = (target.layer - 7) / 3;
 
                 PathRequestManager.RequestPath(currPos, targetPos, OnPathFound);
             }
@@ -91,7 +88,14 @@ public class NPCController : MovementController
             transform.position = targetPosition;
             LastDirection = direction;
 
-            layer = path[i].layer;
+            if (path[i].walkID == 1) //ramp
+            {
+                layer = path[i].layer * 3 + 10;
+            }
+            else
+            {
+                layer = path[i].layer * 3 + 7;
+            }
 
             SetSortingOrder(layer);
         }
