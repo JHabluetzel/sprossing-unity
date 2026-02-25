@@ -230,7 +230,7 @@ public class WorldManager : MonoBehaviour
         {
             Structure structure = Resources.Load<Structure>($"Prefabs/{child.prefabName}");
             structure = Instantiate(structure, new Vector3(child.position[0], child.position[1], 0f), Quaternion.identity, objectParent);
-            structure.SetLayer(child.layer);
+            structure.SetSortingOrder(child.layer);
 
             structures.Add(structure.transform.position, structure);
         }

@@ -8,7 +8,7 @@ public class Structure : MonoBehaviour
 
     [SerializeField] private SpriteLibraryAsset[] libraryAssets;
 
-    public void SetLayer(int baseLayer)
+    public void SetSortingOrder(int baseLayer)
     {
         GetComponent<SpriteRenderer>().sortingOrder = baseLayer;
 
@@ -29,7 +29,7 @@ public class Structure : MonoBehaviour
 
     public void SetupStructure(int baseLayer, int season)
     {
-        SetLayer(baseLayer);
+        SetSortingOrder(baseLayer);
         ChangeSeason(season);
     }
 

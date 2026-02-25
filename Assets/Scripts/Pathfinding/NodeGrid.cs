@@ -93,8 +93,6 @@ public class NodeGrid : MonoBehaviour
 
     public Node GetNodeFromWorldPosition(Vector3 worldPosition, int layer)
     {
-        Debug.Log(layer);
-        
         Vector3Int cellPosition = tilemaps[0].WorldToCell(worldPosition);
         int checkX = cellPosition.x + gridSize.x / 2;
         int checkY = cellPosition.y + gridSize.y / 2;

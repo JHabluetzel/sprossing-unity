@@ -243,6 +243,11 @@ public class PlayerController : MovementController
 
                         if (worldManager.GetPositionLevel(checkPosition, layer, Vector3Int.zero) == layer)
                         {
+                            if (currInput.y > 0)
+                            {
+                                SetSortingOrder(targetLayer);
+                            }
+
                             while (elapsedTime < moveTime)
                             {
                                 transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / moveTime);
@@ -253,12 +258,20 @@ public class PlayerController : MovementController
                             transform.position = targetPosition;
                             layer = targetLayer;
 
-                            SetSortingOrder(layer);
+                            if (currInput.y < 0)
+                            {
+                                SetSortingOrder(targetLayer);
+                            }
                         }
                     }
                 }
                 else
                 {
+                    if (currInput.y > 0)
+                    {
+                        SetSortingOrder(targetLayer);
+                    }
+
                     while (elapsedTime < moveTime)
                     {
                         transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / moveTime);
@@ -269,7 +282,10 @@ public class PlayerController : MovementController
                     transform.position = targetPosition;
                     layer = targetLayer;
 
-                    SetSortingOrder(layer);
+                    if (currInput.y < 0)
+                    {
+                        SetSortingOrder(targetLayer);
+                    }
                 }
             }
 
