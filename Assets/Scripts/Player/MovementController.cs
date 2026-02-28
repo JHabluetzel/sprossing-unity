@@ -45,13 +45,28 @@ public class MovementController : MonoBehaviour
     {
         if ((layer - 1) % 3 != 0) //ramp
         {
-            if (layer % 2 == 0) //lower ramp
+            if (((layer - 7) / 3) % 2 == 0)
             {
-                spriteRenderer.sortingOrder = layer - 6;
+                if (layer % 2 == 0)
+                {
+                    spriteRenderer.sortingOrder = layer - 6;
+                }
+                else
+                {
+                    spriteRenderer.sortingOrder = layer - 4;
+                }
             }
-            else //lower ramp
+            else
             {
-                spriteRenderer.sortingOrder = layer - 4;
+
+                if (layer % 2 == 0)
+                {
+                    spriteRenderer.sortingOrder = layer - 4;
+                }
+                else
+                {
+                    spriteRenderer.sortingOrder = layer - 6;
+                }
             }
         }
         else

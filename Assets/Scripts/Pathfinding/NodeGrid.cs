@@ -75,7 +75,6 @@ public class NodeGrid : MonoBehaviour
                                             goto default;
                                         default:
                                             nodes[x, y, i / 3].walkID = 2;
-
                                             break;
                                     }
                                 }
@@ -169,66 +168,56 @@ public class NodeGrid : MonoBehaviour
 
     public void UpdateNodeInGrid(Vector3 worldPosition, Vector3Int tilePosition)
     {
+        Vector3Int gridPosition = tilePosition + new Vector3Int(gridSize.x / 2, gridSize.y / 2, 0);
+        
         for (int j = 0; j < layerCount; j++)
         {
-            Node updateNode = GetNodeFromWorldPosition(worldPosition, j);
-
-            if (updateNode == null)
+            SeasonalRuleTile tile = tilemaps[j * 3].GetTile<SeasonalRuleTile>(tilePosition);
+            if (tile != null)
             {
-                return;
-            }
+                nodes[gridPosition.x, gridPosition.y, j] = new Node(worldPosition, gridPosition.x, gridPosition.y, j);
 
-            nodes[updateNode.gridX, updateNode.gridY, j] = null;
-
-            for (int i = 0; i < tilemaps.Length; i += 3) //bottom to top
-            {
-                SeasonalRuleTile tile = tilemaps[i].GetTile<SeasonalRuleTile>(tilePosition);
-                if (tile != null)
+                if (tile.tileType == TileType.Grass)
                 {
-                    if (nodes[updateNode.gridX, updateNode.gridY, j] == null)
+                    nodes[gridPosition.x, gridPosition.y, j].movementPenalty = 5;
+
+                    tile = tilemaps[j * 3 + 2].GetTile<SeasonalRuleTile>(tilePosition);
+                    if (tile != null)
                     {
-                        nodes[updateNode.gridX, updateNode.gridY, j] = new Node(worldPosition, updateNode.gridX, updateNode.gridY, j);
+                        nodes[gridPosition.x, gridPosition.y, j].walkID = 0;
                     }
-
-                    if (tile.tileType == TileType.Grass)
+                    else
                     {
-                        nodes[updateNode.gridX, updateNode.gridY, j].movementPenalty = 5;
-
-                        tile = tilemaps[i + 2].GetTile<SeasonalRuleTile>(new Vector3Int(updateNode.gridX - gridSize.x / 2, updateNode.gridY - gridSize.y / 2, 0));
+                        tile = tilemaps[j * 3 + 1].GetTile<SeasonalRuleTile>(tilePosition);
                         if (tile != null)
                         {
-                            nodes[updateNode.gridX, updateNode.gridY, j].walkID = 0;
+                            switch (tile.tileType)
+                            {
+                                case TileType.Cliff:
+                                case TileType.Waterfall:
+                                    nodes[gridPosition.x, gridPosition.y, j].walkID = 0;
+                                    break;
+                                case TileType.Ramp:
+                                    nodes[gridPosition.x, gridPosition.y, j].walkID = 1;
+                                    break;
+                                case TileType.Path:
+                                    nodes[gridPosition.x, gridPosition.y, j].movementPenalty = 0;
+                                    goto default;
+                                default:
+                                    nodes[gridPosition.x, gridPosition.y, j].walkID = 2;
+                                    break;
+                            }
                         }
                         else
                         {
-                            tile = tilemaps[i + 1].GetTile<SeasonalRuleTile>(new Vector3Int(updateNode.gridX - gridSize.x / 2, updateNode.gridY - gridSize.y / 2, 0));
-                            if (tile != null)
-                            {
-                                switch (tile.tileType)
-                                {
-                                    case TileType.Cliff:
-                                    case TileType.Waterfall:
-                                        nodes[updateNode.gridX, updateNode.gridY, j].walkID = 0;
-                                        break;
-                                    case TileType.Ramp:
-                                        nodes[updateNode.gridX, updateNode.gridY, j].walkID = 1;
-                                        break;
-                                    case TileType.Path:
-                                        nodes[updateNode.gridX, updateNode.gridY, j].movementPenalty = 0;
-                                        goto default;
-                                    default:
-                                        nodes[updateNode.gridX, updateNode.gridY, j].walkID = 2;
-
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                nodes[updateNode.gridX, updateNode.gridY, j].walkID = 2;
-                            }
+                            nodes[gridPosition.x, gridPosition.y, j].walkID = 2;
                         }
                     }
                 }
+            }
+            else
+            {
+                nodes[gridPosition.x, gridPosition.y, j] = null;
             }
         }
     }
