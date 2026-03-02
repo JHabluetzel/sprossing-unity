@@ -24,9 +24,7 @@ public class NPCController : MovementController
             }
             else
             {
-                Vector3 targetPos = new Vector3(target.transform.position.x, target.transform.position.y, layer);
-                targetPos.z = (target.layer - 7) / 3;
-
+                Vector3 targetPos = new Vector3(target.transform.position.x, target.transform.position.y, (target.layer - 7) / 3);
                 PathRequestManager.RequestPath(currPos, targetPos, OnPathFound);
             }
         }

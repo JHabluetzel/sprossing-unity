@@ -54,8 +54,7 @@ public class Node : IHeapItem<Node>
 
     public int GetLevel(int checkLayer, Vector3Int direction)
     {
-        int testLayer = checkLayer - 7;
-        testLayer = testLayer / 3;
+        int testLayer = (checkLayer - 7) / 3;
 
         if (walkID == 0)
         {

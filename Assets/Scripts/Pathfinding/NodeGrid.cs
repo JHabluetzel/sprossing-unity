@@ -104,9 +104,9 @@ public class NodeGrid : MonoBehaviour
         return null;
     }
 
-    public List<Node> GetNeighbors(Node centerNode)
+    public List<Node> GetNeighbours(Node centerNode)
     {
-        List<Node> neighbors = new List<Node>();
+        List<Node> neighbours = new List<Node>();
 
         for (int y = -1; y <= 1; y++)
         {
@@ -114,56 +114,71 @@ public class NodeGrid : MonoBehaviour
             {
                 if (x != 0 || y != 0)
                 {
-                    int layer = centerNode.layer;
-                    int checkX = centerNode.gridX + x;
-                    int checkY = centerNode.gridY + y;
-
-                    if (checkX >= 0 && checkX < gridSize.x && checkY >= 0 && checkY < gridSize.y)
+                    Node neighbour = GetNeighbour(centerNode, new Vector3Int(x, y, 0));
+                    if (neighbour != null)
                     {
-                        if (centerNode.walkID == 1 && x != 0) //only vertical movement
-                        {
-                            continue;
-                        }
-
-                        if ((x + y) % 2 == 0) //check diagonal
-                        {
-                            if (nodes[checkX, centerNode.gridY, layer] == null || nodes[centerNode.gridX, checkY, layer] == null)
-                            {
-                                continue;
-                            }
-                            else if (nodes[checkX, centerNode.gridY, layer].walkID != 2 || nodes[centerNode.gridX, checkY, layer].walkID != 2)
-                            {
-                                continue;
-                            }
-                        }
-                        else if (y == 1 && centerNode.walkID == 1) //going up on ramp
-                        {
-                            if (nodes[checkX, checkY, centerNode.layer].walkID != 1) //leaving ramp
-                            {
-                                layer++;
-                            }
-                        }
-                        else if (y == -1 && centerNode.walkID != 1) //going down
-                        {
-                            if (nodes[checkX, checkY, centerNode.layer] == null) //stepping on ramp
-                            {
-                                layer--;
-                            }
-                        }
-
-                        if (nodes[checkX, checkY, layer] != null)
-                        {
-                            if (centerNode.walkID != 2 || x == 0 || nodes[checkX, checkY, layer].walkID != 1) //prevent moving horizontally onto ramp
-                            {
-                                neighbors.Add(nodes[checkX, checkY, layer]);
-                            }
-                        }
+                        neighbours.Add(neighbour);
                     }
                 }
             }
         }
 
-        return neighbors;
+        return neighbours;
+    }
+
+    public Node GetNeighbour(Node centerNode, Vector3Int direction)
+    {
+        int layer = centerNode.layer;
+        int checkX = centerNode.gridX + direction.x;
+        int checkY = centerNode.gridY + direction.y;
+
+        if (checkX >= 0 && checkX < gridSize.x && checkY >= 0 && checkY < gridSize.y)
+        {
+            if (centerNode.walkID == 1 && direction.x != 0) //only vertical movement
+            {
+                return null;
+            }
+
+            if ((direction.x + direction.y) % 2 == 0) //check diagonal
+            {
+                if (nodes[checkX, centerNode.gridY, layer] == null || nodes[centerNode.gridX, checkY, layer] == null)
+                {
+                    return null;
+                }
+                else if (nodes[checkX, centerNode.gridY, layer].walkID != 2 || nodes[centerNode.gridX, checkY, layer].walkID != 2)
+                {
+                    return null;
+                }
+            }
+            else if (direction.y == 1 && centerNode.walkID == 1)
+            {
+                if (nodes[checkX, checkY, centerNode.layer].walkID != 1) //leaving ramp
+                {
+                    layer++;
+                }
+            }
+            else if (direction.y == -1 && centerNode.walkID != 1)
+            {
+                if (nodes[checkX, checkY, centerNode.layer] == null) //stepping on ramp
+                {
+                    layer--;
+                }
+                else if (nodes[checkX, checkY, centerNode.layer].walkID == 1)
+                {
+                    return null;
+                }
+            }
+
+            if (nodes[checkX, checkY, layer] != null)
+            {
+                if (centerNode.walkID != 2 || direction.x == 0 || nodes[checkX, checkY, layer].walkID != 1) //prevent moving horizontally onto ramp
+                {
+                    return nodes[checkX, checkY, layer];
+                }
+            }
+        }
+
+        return null;
     }
 
     public void UpdateNodeInGrid(Vector3 worldPosition, Vector3Int tilePosition)

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -229,19 +231,15 @@ public class PlayerController : MovementController
 
             float moveTime = timeToMove * (targetPosition - startPosition).magnitude;
 
-            int targetLayer = worldManager.GetPositionLevel(targetPosition, layer, currInput);
+            int targetLayer = worldManager.GetPositionLevel(startPosition, layer, currInput);
 
             if (targetLayer > 0)
             {
                 if (currInput.x != 0 && currInput.y != 0) //diagonal movement
                 {
-                    Vector3 checkPosition = grid.CellToWorld(gridPosition + new Vector3Int(currInput.x, 0, 0));
-
-                    if (worldManager.GetPositionLevel(checkPosition, layer, Vector3Int.zero) == layer)
+                    if (worldManager.GetPositionLevel(startPosition, layer, new Vector3Int(currInput.x, 0, 0)) == layer)
                     {
-                        checkPosition = grid.CellToWorld(gridPosition + new Vector3Int(0, currInput.y, 0));
-
-                        if (worldManager.GetPositionLevel(checkPosition, layer, Vector3Int.zero) == layer)
+                        if (worldManager.GetPositionLevel(startPosition, layer, new Vector3Int(0, currInput.y, 0)) == layer)
                         {
                             if (currInput.y > 0)
                             {

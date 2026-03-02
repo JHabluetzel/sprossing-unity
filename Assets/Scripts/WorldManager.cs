@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 public class WorldManager : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
-    [SerializeField] private NodeGrid nodeGrid;
+    public NodeGrid nodeGrid;
 
     [SerializeField] private SeasonalRuleTile[] allTiles;
     [SerializeField] private Transform objectParent;
@@ -293,33 +293,15 @@ public class WorldManager : MonoBehaviour
 
     public int GetPositionLevel(Vector3 position, int layer, Vector3Int direction)
     {
-        int checkLayer = layer - 7;
-        checkLayer = checkLayer / 3;
+        int checkLayer = (layer - 7) / 3;
 
-        if (direction.y == 1 && layer % 3 == 0) //leaving ramp going up
+        Node neighbour = nodeGrid.GetNeighbour(nodeGrid.GetNodeFromWorldPosition(position, checkLayer), direction);
+        if (neighbour == null || neighbour.walkID == 0)
         {
-            checkLayer++;
-        }
-
-        Node targetNode = nodeGrid.GetNodeFromWorldPosition(position, checkLayer);
-
-        if (targetNode == null)
-        {
-            if (direction.y == -1 && (layer - 4) % 3 == 0) //stepping on ramp going down
-            {
-                checkLayer--;
-                targetNode = nodeGrid.GetNodeFromWorldPosition(position, checkLayer);
-
-                if (targetNode != null)
-                {
-                    return targetNode.GetLevel(layer, direction);
-                }
-            }
-            
             return 0;
         }
 
-        return targetNode.GetLevel(layer, direction);
+        return neighbour.GetLevel(layer, direction);
     }
 
     public bool Pathing(Vector3 position, int layer)

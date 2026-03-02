@@ -43,7 +43,7 @@ public class Pathfinding : MonoBehaviour
                 break;
             }
 
-            foreach (Node neighbour in nodes.GetNeighbors(currentNode))
+            foreach (Node neighbour in nodes.GetNeighbours(currentNode))
             {
                 if (neighbour.walkID == 0 || closedSet.Contains(neighbour))
                 {
