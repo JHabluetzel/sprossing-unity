@@ -17,7 +17,9 @@ public class GlobalManager : MonoBehaviour
         DontDestroyOnLoad(this);
         singleton = this;
 
-        LocalizationSettings.InitializationOperation.WaitForCompletion(); //WebGLPlayer does not support synchronous Addressable loading
+        #if !UNITY_WEBGL
+            LocalizationSettings.InitializationOperation.WaitForCompletion(); //WebGLPlayer does not support synchronous Addressable loading
+        #endif
 
         LoadScene("MenuScene");
     }
